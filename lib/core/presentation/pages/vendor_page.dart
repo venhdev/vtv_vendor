@@ -41,8 +41,18 @@ class VendorPage extends StatelessWidget {
       builder: (context, state) {
         if (state.status == AuthStatus.unauthenticated) {
           return const VendorLoginPage(showTitle: false);
+        } else if (state.status == AuthStatus.authenticated) {
+          return _buildBody(context);
         }
-        return _buildBody(context);
+        return Scaffold(
+          body: Center(
+            child: const Text(
+              'Đang tải...',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
+        );
       },
     );
   }
@@ -77,12 +87,14 @@ class _OrderPurchaseSummaryState extends State<OrderPurchaseSummary> {
           return _summaryInfo(context, snapshot.data!);
           // return SizedBox();
         } else {
-          return const Center(
-              child: Text(
-            'Đang tải...',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black54),
-          ));
+          return const SizedBox.shrink();
+          // return const Center(
+          //   child: Text(
+          //     'Đang tải...',
+          //     textAlign: TextAlign.center,
+          //     style: TextStyle(color: Colors.black54),
+          //   ),
+          // );
         }
       },
     );
@@ -117,65 +129,55 @@ class _OrderPurchaseSummaryState extends State<OrderPurchaseSummary> {
           TextButton(
               onPressed: () {
                 navigateToPage(0);
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return VendorOrderPurchasePage(initialMultiOrders: dataList);
-                //     },
-                //   ),
-                // );
               },
               child: const Text('Xem tất cả')),
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            children: [
-              dataList[getIndex(OrderStatus.PENDING)].fold(
-                (error) => const SizedBox.shrink(),
-                (ok) => OrderHistoryItem(
-                  ok.data!.orders.length,
-                  OrderStatus.PENDING,
-                  onPressed: () => navigateToPage(getIndex(OrderStatus.PENDING)),
-                ),
+      child: FittedBox(
+        // scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            dataList[getIndex(OrderStatus.PENDING)].fold(
+              (error) => const SizedBox.shrink(),
+              (ok) => OrderHistoryItem(
+                ok.data!.orders.length,
+                OrderStatus.PENDING,
+                onPressed: () => navigateToPage(getIndex(OrderStatus.PENDING)),
               ),
-              dataList[getIndex(OrderStatus.PROCESSING)].fold(
-                (error) => const SizedBox.shrink(),
-                (ok) => OrderHistoryItem(
-                  ok.data!.orders.length,
-                  OrderStatus.PROCESSING,
-                  onPressed: () => navigateToPage(getIndex(OrderStatus.PROCESSING)),
-                ),
+            ),
+            dataList[getIndex(OrderStatus.PROCESSING)].fold(
+              (error) => const SizedBox.shrink(),
+              (ok) => OrderHistoryItem(
+                ok.data!.orders.length,
+                OrderStatus.PROCESSING,
+                onPressed: () => navigateToPage(getIndex(OrderStatus.PROCESSING)),
               ),
-              dataList[getIndex(OrderStatus.PICKUP_PENDING)].fold(
-                (error) => const SizedBox.shrink(),
-                (ok) => OrderHistoryItem(
-                  ok.data!.orders.length,
-                  OrderStatus.PICKUP_PENDING,
-                  onPressed: () => navigateToPage(getIndex(OrderStatus.PICKUP_PENDING)),
-                ),
+            ),
+            dataList[getIndex(OrderStatus.PICKUP_PENDING)].fold(
+              (error) => const SizedBox.shrink(),
+              (ok) => OrderHistoryItem(
+                ok.data!.orders.length,
+                OrderStatus.PICKUP_PENDING,
+                onPressed: () => navigateToPage(getIndex(OrderStatus.PICKUP_PENDING)),
               ),
-              dataList[getIndex(OrderStatus.SHIPPING)].fold(
-                (error) => const SizedBox.shrink(),
-                (ok) => OrderHistoryItem(
-                  ok.data!.orders.length,
-                  OrderStatus.SHIPPING,
-                  onPressed: () => navigateToPage(getIndex(OrderStatus.SHIPPING)),
-                ),
+            ),
+            dataList[getIndex(OrderStatus.SHIPPING)].fold(
+              (error) => const SizedBox.shrink(),
+              (ok) => OrderHistoryItem(
+                ok.data!.orders.length,
+                OrderStatus.SHIPPING,
+                onPressed: () => navigateToPage(getIndex(OrderStatus.SHIPPING)),
               ),
-              dataList[getIndex(OrderStatus.CANCEL)].fold(
-                (error) => const SizedBox.shrink(),
-                (ok) => OrderHistoryItem(
-                  ok.data!.orders.length,
-                  OrderStatus.CANCEL,
-                  onPressed: () => navigateToPage(getIndex(OrderStatus.CANCEL)),
-                ),
-              ),
-            ],
-          ),
+            ),
+            // dataList[getIndex(OrderStatus.CANCEL)].fold(
+            //   (error) => const SizedBox.shrink(),
+            //   (ok) => OrderHistoryItem(
+            //     ok.data!.orders.length,
+            //     OrderStatus.CANCEL,
+            //     onPressed: () => navigateToPage(getIndex(OrderStatus.CANCEL)),
+            //   ),
+            // ),
+          ],
         ),
       ),
     );

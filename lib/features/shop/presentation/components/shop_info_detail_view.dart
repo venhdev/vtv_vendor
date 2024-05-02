@@ -54,13 +54,14 @@ class ShopInfoDetailView extends StatelessWidget {
                       },
                     );
                   }
-                  return const Center(
-                    child: Text(
-                      'Đang tải...',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black54),
-                    ),
-                  );
+                  return const SizedBox.shrink();
+                  // return const Center(
+                  //   child: Text(
+                  //     'Đang tải...',
+                  //     textAlign: TextAlign.center,
+                  //     style: TextStyle(color: Colors.black54),
+                  //   ),
+                  // );
                 },
               );
             },

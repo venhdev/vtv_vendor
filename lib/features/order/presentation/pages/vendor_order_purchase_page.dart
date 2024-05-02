@@ -14,7 +14,8 @@ const List<OrderStatus> vendorTapPages = [
   OrderStatus.SHIPPING, // 3
   OrderStatus.DELIVERED, // 4
   OrderStatus.COMPLETED, // 5
-  OrderStatus.CANCEL, // 6
+  OrderStatus.WAITING, // 6
+  OrderStatus.CANCEL, // 7
 ];
 
 class VendorOrderPurchasePage extends StatefulWidget {
@@ -65,49 +66,52 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
         order: order,
         onPressed: () => VendorHandler.navigateToOrderDetailPage(context, order.orderId!),
         actionBuilder: (status) => buildVendorAction(status, order, reloadCallback, context),
-        // onAccepted: () => VendorHandler.updateOrderStatus(context, order.orderId!, OrderStatus.PROCESSING, reloadCallback),
-        // onWaitingForShipping: () =>
-        //     VendorHandler.updateOrderStatus(context, order.orderId!, OrderStatus.PICKUP_PENDING, reloadCallback),
       ),
-      pageController: OrderPurchasePageController(tapPages: vendorTapPages, initialIndex: widget.initialIndex),
+      pageController: OrderPurchasePageController(
+        tapPages: vendorTapPages,
+        initialIndex: widget.initialIndex,
+      ),
     );
   }
 
-// ] else ...[
   Widget buildVendorAction(OrderStatus status, OrderEntity order, VoidCallback reloadCallback, BuildContext context) {
     switch (status) {
       case OrderStatus.PENDING:
         return OrderPurchaseItemAction(
           label: 'Xác nhận đơn hàng này?',
           buttonLabel: 'Xác nhận',
-          onPressed: () =>
-              VendorHandler.updateOrderStatus(context, order.orderId!, OrderStatus.PROCESSING, reloadCallback),
+          onPressed: () => VendorHandler.updateOrderStatus(
+            context,
+            order.orderId!,
+            OrderStatus.PROCESSING,
+            reloadCallback,
+          ),
           backgroundColor: Colors.blue.shade100,
           buttonColor: Colors.blue.shade200,
         );
 
       case OrderStatus.PROCESSING:
         return OrderPurchaseItemAction(
-          label: 'Đơn hàng đã chuẩn bị xong?',
-          buttonLabel: 'Chờ giao hàng',
+          label: 'Đơn hàng đã đóng gói xong?',
+          buttonLabel: 'Đã đóng gói',
           onPressed: () =>
               VendorHandler.updateOrderStatus(context, order.orderId!, OrderStatus.PICKUP_PENDING, reloadCallback),
           backgroundColor: Colors.orange.shade100,
           buttonColor: Colors.orange.shade400,
         );
-      // case OrderStatus.PICKUP_PENDING:
-      //   // show qr code
-      //   return OrderPurchaseItemAction(
-      //     label: 'Hiển thị mã QR cho người giao hàng',
-      //     buttonLabel: 'Mở',
-      //     onPressed: () => Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //         builder: (context) {
-      //           return const QRViewPage(data: order.idNotHere);
-      //         },
-      //       ),
-      //     ),
-      //   );
+      case OrderStatus.WAITING:
+        return OrderPurchaseItemAction(
+          label: 'Đơn hàng đã bị hủy?',
+          buttonLabel: 'Xác nhận',
+          onPressed: () => VendorHandler.updateOrderStatus(
+            context,
+            order.orderId!,
+            OrderStatus.CANCEL,
+            reloadCallback,
+          ),
+          backgroundColor: Colors.red.shade100,
+          buttonColor: Colors.red.shade400,
+        );
       default:
         return const SizedBox.shrink();
     }
