@@ -30,7 +30,6 @@ class VendorOrderPurchasePage extends StatefulWidget {
 
 class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
   FRespData<MultiOrderEntity> _dataCallback(OrderStatus? status) async {
-    // return sl<OrderVendorRepository>().getOrderList();
     if (status == null) {
       return sl<OrderVendorRepository>().getOrderList();
     } else {
@@ -41,7 +40,7 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
   @override
   Widget build(BuildContext context) {
     return OrderPurchasePage.vendor(
-      appBarTitle: 'Đơn hàng của bạn',
+      appBarTitle: 'Đơn hàng',
       actions: [
         // notification
         IconButton(

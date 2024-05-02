@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vtv_common/auth.dart';
+import 'package:vtv_common/core.dart';
 
-import 'core/presentation/components/app_drawer.dart';
-import 'core/presentation/pages/vendor_page.dart';
 import 'features/order/presentation/pages/vendor_order_purchase_page.dart';
+import 'features/vendor/presentation/components/app_drawer.dart';
+import 'features/vendor/presentation/pages/vendor_home_page.dart';
 
 class VendorApp extends StatelessWidget {
   const VendorApp({super.key});
@@ -10,8 +13,8 @@ class VendorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-    // TODO title here?
       debugShowCheckedModeBanner: false,
+      title: 'VTV Vendor',
       home: AppScaffold(),
     );
   }
@@ -27,7 +30,7 @@ class AppScaffold extends StatefulWidget {
 class _AppScaffoldState extends State<AppScaffold> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-    const VendorPage(),
+    const VendorHomePage(),
     const VendorOrderPurchasePage(),
   ];
 
@@ -50,33 +53,57 @@ class _AppScaffoldState extends State<AppScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_appTitle(_selectedIndex)),
-        actions: [
-          // notification
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-          ),
-          // chat
-          const IconButton(
-            icon: Icon(Icons.chat),
-            onPressed: null,
-          ),
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        if (state.status == AuthStatus.authenticated) {
+          if (!state.auth!.userInfo.roles!.contains(Role.VENDOR)) {
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Ứng dụng chỉ dành cho người bán hàng',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black54),
+                    ),
 
-          // setting
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {},
+                    //btn logout
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<AuthCubit>().logout(state.auth!.refreshToken);
+                      },
+                      child: const Text('Đăng xuất'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+        }
+        return Scaffold(
+          drawer: AppDrawer(
+            selectedIndex: _selectedIndex,
+            onItemTapped: _onItemTapped,
           ),
-        ],
-      ),
-      body: _widgetOptions[_selectedIndex],
-      drawer: AppDrawer(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+          appBar: AppBar(
+            title: Text(_appTitle(_selectedIndex)),
+            actions: const [
+              // chat
+              IconButton(
+                icon: Icon(Icons.chat),
+                onPressed: null,
+              ),
+              // notification
+              IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: null, // TODO chat
+              ),
+            ],
+          ),
+          body: _widgetOptions[_selectedIndex],
+        );
+      },
     );
   }
 }

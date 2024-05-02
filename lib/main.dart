@@ -6,6 +6,7 @@ import 'package:vendor/config/firebase_options.dart';
 import 'package:vendor/service_locator.dart';
 import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
+import 'package:vtv_common/dev.dart';
 
 import 'vendor_app.dart';
 
@@ -16,7 +17,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   await initializeLocator();
   sl<LocalNotificationUtils>().init();
   sl<FirebaseCloudMessagingManager>().init();
@@ -24,9 +25,15 @@ void main() async {
   final authCubit = sl<AuthCubit>()..onStarted();
 
   // NOTE: dev
-  final domain = sl<SharedPreferencesHelper>().I.getString('devDomain');
-  if (domain != null) {
-    devDOMAIN = domain;
+  final savedHost = sl<SharedPreferencesHelper>().I.getString('host');
+  if (savedHost != null) {
+    host = savedHost;
+  } else {
+    final curHost = await DevUtils.initHostWithCurrentIPv4();
+    if (curHost != null) {
+      host = curHost;
+      sl<SharedPreferencesHelper>().I.setString('host', curHost);
+    }
   }
 
   runApp(MultiProvider(
