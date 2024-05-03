@@ -51,11 +51,9 @@ class VendorHandler {
         (error) => showDialogToAlert(context, title: Text(error.message ?? 'Lỗi khi lấy thông tin đơn hàng')),
         (ok) => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => OrderDetailPage(
+            builder: (context) => OrderDetailPage.vendor(
               orderDetail: ok.data!,
-              onCompleteOrderPressed: (_) async => {},
-              onCancelOrderPressed: (_) async => {},
-              onRePurchasePressed: (_) async => {},
+              onBack: () => Navigator.of(context).pop(),
             ),
           ),
         ),

@@ -6,10 +6,6 @@ import '../../../../service_locator.dart';
 import '../../domain/repository/shop_vendor_repository.dart';
 
 class ShopInfoDetailView extends StatelessWidget {
-  /// This View is used in the VendorPage:
-  /// - 1: after the user has logged in
-  /// - 2: load the shop profile to get the shopId
-  /// - 3: load the shop detail >> display the shop info
   const ShopInfoDetailView({
     super.key,
   });
@@ -49,7 +45,18 @@ class ShopInfoDetailView extends StatelessWidget {
                                 offset: Offset(0, 2),
                               ),
                             ],
-                          )
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ShopInfoDetailPage(
+                                    shopDetail: ok.data!,
+                                  );
+                                },
+                              ),
+                            );
+                          },
                         );
                       },
                     );

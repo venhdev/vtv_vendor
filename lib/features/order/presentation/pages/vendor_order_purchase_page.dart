@@ -41,24 +41,6 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
   Widget build(BuildContext context) {
     return OrderPurchasePage.vendor(
       appBarTitle: 'Đơn hàng',
-      actions: [
-        // notification
-        IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () {},
-        ),
-        // chat
-        const IconButton(
-          icon: Icon(Icons.chat),
-          onPressed: null,
-        ),
-
-        // setting
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {},
-        ),
-      ],
       dataCallback: _dataCallback,
       initialMultiOrders: widget.initialMultiOrders,
       vendorItemBuilder: (order, reloadCallback) => OrderPurchaseItem(
