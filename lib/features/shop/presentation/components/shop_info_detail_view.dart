@@ -19,14 +19,14 @@ class ShopInfoDetailView extends StatelessWidget {
           final resultEither = snapshot.data!;
 
           return resultEither.fold(
-            (error) => Center(child: Text(error.message ?? 'Lỗi khi tải dữ liệu Shop')),
+            (error) => const SizedBox.shrink(),
             (ok) {
               return FutureBuilder(
                 future: sl<GuestRepository>().getShopDetailById(ok.data!.shopId),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return snapshot.data!.fold(
-                      (error) => Center(child: Text(error.message ?? 'Lỗi khi tải dữ liệu chi tiết Shop')),
+                      (error) => const SizedBox.shrink(),
                       (ok) {
                         return ShopInfo(
                           shopId: ok.data!.shop.shopId,
@@ -62,25 +62,12 @@ class ShopInfoDetailView extends StatelessWidget {
                     );
                   }
                   return const SizedBox.shrink();
-                  // return const Center(
-                  //   child: Text(
-                  //     'Đang tải...',
-                  //     textAlign: TextAlign.center,
-                  //     style: TextStyle(color: Colors.black54),
-                  //   ),
-                  // );
                 },
               );
             },
           );
         }
-        return const Center(
-          child: Text(
-            'Đang tải...',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black54),
-          ),
-        );
+        return const SizedBox.shrink();
       },
     );
   }

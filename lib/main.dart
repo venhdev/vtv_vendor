@@ -19,7 +19,7 @@ void main() async {
   );
 
   await initializeLocator();
-  sl<LocalNotificationUtils>().init();
+  sl<LocalNotificationHelper>().init();
   sl<FirebaseCloudMessagingManager>().init();
 
   final authCubit = sl<AuthCubit>()..onStarted();

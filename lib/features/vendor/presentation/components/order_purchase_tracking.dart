@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
@@ -30,15 +32,27 @@ class _OrderPurchaseTrackingState extends State<OrderPurchaseTracking> {
       future: _futureDataOrders(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return _trackingInfo(context, snapshot.data!);
+          //> check if any resp got error >> return empty
+          if (snapshot.data!.any((resp) => resp.isLeft())) {
+            return const SizedBox.shrink();
+          }
+
+          return _trackingInfo(context, dataList: snapshot.data!);
         } else {
-          return const SizedBox.shrink();
+          log('[OrderPurchaseTracking] snapshot.data: ${snapshot.data}');
+          return const Center(
+            child: Text(
+              'Đang tải dữ liệu đơn hàng...',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.black54),
+            ),
+          );
         }
       },
     );
   }
 
-  Wrapper _trackingInfo(BuildContext context, List<RespData<MultiOrderEntity>> dataList) {
+  Wrapper _trackingInfo(BuildContext context, {required List<RespData<MultiOrderEntity>> dataList}) {
     void navigateToPurchasePage(int index) {
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -146,7 +160,7 @@ class OrderTrackingItem extends StatelessWidget {
 
               //# order status name
               Text(
-                StringHelper.getOrderStatusName(status),
+                StringUtils.getOrderStatusName(status),
                 style: const TextStyle(
                   fontSize: 14,
                 ),

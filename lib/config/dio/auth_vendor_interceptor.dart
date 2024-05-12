@@ -31,7 +31,7 @@ class AuthVendorInterceptor extends QueuedInterceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     //> handle expired token
     //? check if the response is 401 >> get new token - save - retry
-    log('got error: ${err.response?.statusCode} - ${err.response?.data} - ${err.type}');
+    log('[AuthVendorInterceptor] onError: statusCode:${err.response?.statusCode} - data:${err.response?.data} - type:${err.type}');
     if (err.response?.statusCode == 401 &&
         err.response?.data['message'] == 'Thông báo: Phiên đăng nhập đã hết hạn.' &&
         err.type == DioExceptionType.badResponse) {

@@ -4,7 +4,7 @@ import 'package:vtv_common/order.dart';
 
 import '../../../../core/constants/vendor_api.dart';
 
-abstract class OrderVendorDataSource {
+abstract class VendorOrderDataSource {
   //# order-shop-controller
   Future<SuccessResponse<MultiOrderEntity>> getOrderList();
   Future<SuccessResponse<OrderEntity>> updateOrderStatus(String orderId, OrderStatus status);
@@ -13,7 +13,7 @@ abstract class OrderVendorDataSource {
 
 }
 
-class OrderVendorDataSourceImpl implements OrderVendorDataSource {
+class OrderVendorDataSourceImpl implements VendorOrderDataSource {
   final Dio _dio;
 
   OrderVendorDataSourceImpl(this._dio);

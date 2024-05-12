@@ -3,11 +3,11 @@ import 'package:vendor/core/constants/vendor_api.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/shop.dart';
 
-abstract class ShopVendorDataSource {
+abstract class VendorShopDataSource {
   Future<SuccessResponse<ShopEntity>> getShopProfile();
 }
 
-class ShopVendorDataSourceImpl implements ShopVendorDataSource {
+class ShopVendorDataSourceImpl implements VendorShopDataSource {
   final Dio _dio;
 
   ShopVendorDataSourceImpl(this._dio);

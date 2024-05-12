@@ -2,12 +2,12 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
 import '../../domain/repository/order_vendor_repository.dart';
-import '../data_sources/order_vendor_data_source.dart';
+import '../data_sources/vendor_order_data_source.dart';
 
-class OrderVendorRepositoryImpl implements OrderVendorRepository {
-  final OrderVendorDataSource _dataSource;
+class VendorOrderRepositoryImpl implements OrderVendorRepository {
+  final VendorOrderDataSource _dataSource;
 
-  OrderVendorRepositoryImpl(this._dataSource);
+  VendorOrderRepositoryImpl(this._dataSource);
 
   @override
   FRespData<MultiOrderEntity> getOrderList() async {

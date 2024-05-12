@@ -5,7 +5,9 @@ import 'package:vtv_common/core.dart';
 
 import 'features/order/presentation/pages/vendor_order_purchase_page.dart';
 import 'features/vendor/presentation/components/app_drawer.dart';
+import 'features/vendor/presentation/pages/no_permission_page.dart';
 import 'features/vendor/presentation/pages/vendor_home_page.dart';
+import 'features/vendor/presentation/pages/vendor_login_page.dart';
 
 class VendorApp extends StatelessWidget {
   const VendorApp({super.key});
@@ -43,7 +45,7 @@ class _AppScaffoldState extends State<AppScaffold> {
   String _appTitle(int index) {
     switch (index) {
       case 0:
-        return 'Shop của bạn';
+        return 'Vendor App';
       case 1:
         return '----';
       default:
@@ -53,57 +55,61 @@ class _AppScaffoldState extends State<AppScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, state) {
-        if (state.status == AuthStatus.authenticated) {
-          if (!state.auth!.userInfo.roles!.contains(Role.VENDOR)) {
-            return Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Ứng dụng chỉ dành cho người bán hàng',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black54),
-                    ),
-
-                    //btn logout
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<AuthCubit>().logout(state.auth!.refreshToken);
-                      },
-                      child: const Text('Đăng xuất'),
-                    ),
-                  ],
+    return Scaffold(
+      drawer: AppDrawer(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
+      appBar: AppBar(
+        title: Text(_appTitle(_selectedIndex)),
+        // actions: const [
+        //   // chat
+        //   IconButton(
+        //     icon: Icon(Icons.chat),
+        //     onPressed: null,
+        //   ),
+        //   // notification
+        //   IconButton(
+        //     icon: Icon(Icons.notifications),
+        //     onPressed: null, // TODO chat
+        //   ),
+        // ],
+      ),
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.message != null) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.message!),
+                  duration: const Duration(seconds: 3),
                 ),
-              ),
-            );
+              );
           }
-        }
-        return Scaffold(
-          drawer: AppDrawer(
-            selectedIndex: _selectedIndex,
-            onItemTapped: _onItemTapped,
-          ),
-          appBar: AppBar(
-            title: Text(_appTitle(_selectedIndex)),
-            actions: const [
-              // chat
-              IconButton(
-                icon: Icon(Icons.chat),
-                onPressed: null,
-              ),
-              // notification
-              IconButton(
-                icon: Icon(Icons.notifications),
-                onPressed: null, // TODO chat
-              ),
-            ],
-          ),
-          body: _widgetOptions[_selectedIndex],
-        );
-      },
+        },
+        builder: (context, state) {
+          // log('[AppScaffold] build with state: $state');
+          if (state.status == AuthStatus.authenticated) {
+            //# prevent user access to vendor app
+            if (!state.auth!.userInfo.roles!.contains(Role.VENDOR)) {
+              return NoAccessPermissionPage(refreshToken: state.auth!.refreshToken);
+            } else {
+              return _widgetOptions[_selectedIndex];
+            }
+          } else if (state.status == AuthStatus.unauthenticated) {
+            return const VendorLoginPage(showTitle: false);
+          }
+
+          return const Center(
+            child: Text(
+              'Đang tải...',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.black54),
+            ),
+          );
+        },
+      ),
     );
   }
 }
