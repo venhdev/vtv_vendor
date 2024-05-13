@@ -8,16 +8,16 @@ import 'product_variant_request.dart';
 
 class AddUpdateProductParam {
   final int? productId;
-  String name;
-  String? image;
-  bool changeImage;
-  String description;
-  String information;
-  int categoryId;
-  int? brandId;
-  List<ProductVariantRequest> productVariantRequests;
+  final String name;
+  final String? image;
+  final bool changeImage;
+  final String description;
+  final String information;
+  final int categoryId;
+  final int? brandId;
+  final List<ProductVariantRequest> productVariantRequests;
 
-  AddUpdateProductParam({
+ const AddUpdateProductParam({
     this.productId,
     required this.name,
     this.image,
@@ -72,7 +72,7 @@ class AddUpdateProductParam {
   Future<Map<String, dynamic>> toMapWithVariants() async {
     final baseMap = await toMap();
     baseMap.addEntries([
-      MapEntry('productVariantRequests',await Future.wait(productVariantRequests.map((e)async => await e.toMap()))),
+      MapEntry('productVariantRequests', await Future.wait(productVariantRequests.map((e) async => await e.toMap()))),
     ]);
     return baseMap;
   }
@@ -131,5 +131,29 @@ class AddUpdateProductParam {
         categoryId.hashCode ^
         brandId.hashCode ^
         productVariantRequests.hashCode;
+  }
+
+  AddUpdateProductParam copyWith({
+    int? productId,
+    String? name,
+    String? image,
+    bool? changeImage,
+    String? description,
+    String? information,
+    int? categoryId,
+    int? brandId,
+    List<ProductVariantRequest>? productVariantRequests,
+  }) {
+    return AddUpdateProductParam(
+      productId: productId ?? this.productId,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      changeImage: changeImage ?? this.changeImage,
+      description: description ?? this.description,
+      information: information ?? this.information,
+      categoryId: categoryId ?? this.categoryId,
+      brandId: brandId ?? this.brandId,
+      productVariantRequests: productVariantRequests ?? this.productVariantRequests,
+    );
   }
 }

@@ -5,7 +5,7 @@ class ProductAttributeRequest {
   final String name;
   final String value;
 
-  ProductAttributeRequest({
+  const ProductAttributeRequest({
     required this.name,
     required this.value,
   });

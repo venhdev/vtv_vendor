@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../shop/presentation/components/shop_info_detail_view.dart';
+import '../components/order_purchase_tracking.dart';
 import 'add_update_product_page.dart';
 
 class VendorHomePage extends StatelessWidget {
@@ -10,8 +12,8 @@ class VendorHomePage extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.zero,
       children: [
-        // const ShopInfoDetailView(),
-        // const OrderPurchaseTracking(),
+        const ShopInfoDetailView(),
+        const OrderPurchaseTracking(),
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(

@@ -4,25 +4,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:vtv_common/core.dart';
 import 'package:vtv_common/home.dart';
 
 import '../../../../service_locator.dart';
 import '../../domain/entities/category_with_nested_children_entity.dart';
 import '../../domain/repository/vendor_product_repository.dart';
-
-class Debouncer {
-  final int milliseconds;
-  Timer? _timer;
-
-  Debouncer({required this.milliseconds});
-
-  run(VoidCallback action) {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
-}
 
 class CategoryPickerDialog extends StatefulWidget {
   const CategoryPickerDialog({super.key});
@@ -32,7 +19,7 @@ class CategoryPickerDialog extends StatefulWidget {
 }
 
 class _CategoryPickerDialogState extends State<CategoryPickerDialog> {
-  final _debouncer = Debouncer(milliseconds: 500);
+  final _debouncer = FunctionUtils.createDebouncer(milliseconds: 500);
   final _searchController = TextEditingController();
   final List<CategoryWithNestedChildrenEntity> _categoriesWithChildren = [];
   final List<CategoryWithNestedChildrenEntity> _matchedCategoriesWithChildren = []; // matched with search text

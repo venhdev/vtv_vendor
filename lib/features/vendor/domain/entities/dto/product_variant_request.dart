@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -7,14 +6,14 @@ import 'package:vtv_common/core.dart';
 import 'product_attribute_request.dart';
 
 class ProductVariantRequest {
-  int? productVariantId;
-  String sku;
-  String? image;
-  bool changeImage;
-  int originalPrice;
-  int price;
-  int quantity;
-  List<ProductAttributeRequest> productAttributeRequests;
+  final int? productVariantId;
+  final String sku;
+  final String? image;
+  final bool changeImage;
+  final int originalPrice;
+  final int price;
+  final int quantity;
+  final List<ProductAttributeRequest> productAttributeRequests;
 
   ProductVariantRequest({
     this.productVariantId,
@@ -26,6 +25,55 @@ class ProductVariantRequest {
     required this.quantity,
     required this.productAttributeRequests,
   });
+  //! for add/update variant
+  String get attributeIdentifier {
+    if (productAttributeRequests.isEmpty) return sku;
+    return productAttributeRequests.map((e) => e.value).join(', ');
+  }
+
+  bool isValid({bool imageRequired = true, bool hasAttribute = true}) {
+    if (sku.isEmpty) {
+      return false;
+    }
+    if (imageRequired && image == null) {
+      return false;
+    }
+    if (originalPrice <= 0) {
+      return false;
+    }
+    if (price <= 0) {
+      return false;
+    }
+    if (quantity <= 0) {
+      return false;
+    }
+    if (hasAttribute && productAttributeRequests.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  String isValidMessage({bool imageRequired = true, bool hasAttribute = true}) {
+    if (sku.isEmpty) {
+      return 'SKU không hợp lệ';
+    }
+    if (imageRequired && image == null) {
+      return 'ảnh không hợp lệ';
+    }
+    if (originalPrice <= 0) {
+      return 'giá gốc không hợp lệ';
+    }
+    if (price <= 0) {
+      return 'giá bán không hợp lệ';
+    }
+    if (quantity <= 0) {
+      return 'số lượng không hợp lệ';
+    }
+    if (hasAttribute && productAttributeRequests.isEmpty) {
+      return 'thuộc tính không hợp lệ';
+    }
+    return '';
+  }
 
   ProductVariantRequest copyWith({
     int? productVariantId,
@@ -63,27 +111,7 @@ class ProductVariantRequest {
     };
   }
 
-  // factory ProductVariantRequest.fromMap(Map<String, dynamic> map) {
-  //   return ProductVariantRequest(
-  //     productVariantId: map['productVariantId'] as int,
-  //     sku: map['sku'] as String,
-  //     image: map['image'] as String,
-  //     changeImage: map['changeImage'] as bool,
-  //     originalPrice: map['originalPrice'] as int,
-  //     price: map['price'] as int,
-  //     quantity: map['quantity'] as int,
-  //     productAttributeRequests: List<ProductAttributeRequest>.from(
-  //       (map['productAttributeRequests'] as List<int>).map<ProductAttributeRequest>(
-  //         (x) => ProductAttributeRequest.fromMap(x as Map<String, dynamic>),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Future<String> toJson() async => json.encode(await toMap());
-
-  // factory ProductVariantRequest.fromJson(String source) =>
-  //     ProductVariantRequest.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
