@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:vendor/features/vendor/domain/entities/dto/add_update_product_param.dart';
-import 'package:vendor/features/vendor/presentation/pages/add_update_variants_page.dart';
+import 'package:vendor/features/product/domain/entities/dto/add_update_product_param.dart';
+import 'package:vendor/features/product/presentation/pages/add_update_variants_page.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/home.dart';
 

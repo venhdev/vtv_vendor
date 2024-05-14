@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vtv_common/core.dart';
 
 import '../../../../service_locator.dart';
-import '../../../shop/domain/repository/shop_vendor_repository.dart';
-import '../../../shop/presentation/components/shop_info_detail_view.dart';
+import '../../../auth/domain/repository/profile_repository.dart';
+import '../../../auth/presentation/components/shop_info_detail_view.dart';
 import '../components/order_purchase_tracking.dart';
 import 'add_update_product_page.dart';
 import 'vendor_product_page.dart';
@@ -26,7 +26,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
         padding: EdgeInsets.zero,
         children: [
           FutureBuilder(
-            future: sl<ShopVendorRepository>().getShopProfile(),
+            future: sl<ProfileRepository>().getShopProfile(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final resultEither = snapshot.data!;

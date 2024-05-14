@@ -6,7 +6,7 @@ import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/dev.dart';
 
-import '../../../../service_locator.dart';
+import 'service_locator.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({

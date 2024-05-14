@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:vendor/features/vendor/domain/entities/category_with_nested_children_entity.dart';
+import 'package:vendor/features/product/domain/entities/category_with_nested_children_entity.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
 import 'package:vtv_common/home.dart';

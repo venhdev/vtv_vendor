@@ -1,4 +1,18 @@
 //# shop-controller
+// PUT
+// /api/vendor/shop/update
+const String kAPIVendorShopUpdateURL = '/vendor/shop/update';
+
+// POST
+// /api/vendor/register
+const String kAPIVendorRegisterURL = '/vendor/register';
+
+// PATCH
+// /api/vendor/shop/update/status/{status}
+const String kAPIVendorShopUpdateStatusURL = '/vendor/shop/update/status/:status'; // {status}
+
+// GET
+// /api/vendor/shop/profile
 const String kAPIVendorShopProfileURL = '/vendor/shop/profile';
 
 //# order-shop-controller
@@ -27,3 +41,4 @@ const String kAPIVendorProductRestoreURL = '/vendor/product/restore/:productId';
 // GET
 // /api/vendor/product/page/status/{status}
 const String kAPIVendorProductPageStatusURL = '/vendor/product/page/status/:status'; // {status}
+

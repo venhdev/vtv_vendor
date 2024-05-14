@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vendor/features/shop/data/data_sources/vendor_shop_data_source.dart';
+import 'package:vendor/features/auth/data/data_sources/profile_data_source.dart';
 import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/config.dart';
 import 'package:vtv_common/core.dart';
@@ -16,11 +16,11 @@ import 'config/dio/auth_vendor_interceptor.dart';
 import 'features/order/data/data_sources/vendor_order_data_source.dart';
 import 'features/order/data/repository/vendor_order_repository_impl.dart';
 import 'features/order/domain/repository/order_vendor_repository.dart';
-import 'features/shop/data/repository/shop_vendor_repository_impl.dart';
-import 'features/shop/domain/repository/shop_vendor_repository.dart';
-import 'features/vendor/data/data_sources/vendor_product_data_source.dart';
-import 'features/vendor/data/repository/vendor_product_repository_impl.dart';
-import 'features/vendor/domain/repository/vendor_product_repository.dart';
+import 'features/auth/data/repository/profile_repository_impl.dart';
+import 'features/auth/domain/repository/profile_repository.dart';
+import 'features/product/data/data_sources/vendor_product_data_source.dart';
+import 'features/product/data/repository/vendor_product_repository_impl.dart';
+import 'features/product/domain/repository/vendor_product_repository.dart';
 
 // Service locator
 GetIt sl = GetIt.instance;
@@ -65,7 +65,7 @@ Future<void> initializeLocator() async {
   sl.registerSingleton<VendorProductDataSource>(VendorProductDataSourceImpl(sl()));
   sl.registerSingleton<AuthDataSource>(AuthDataSourceImpl(sl(), sl(), sl(), sl()));
 
-  sl.registerSingleton<VendorShopDataSource>(ShopVendorDataSourceImpl(sl()));
+  sl.registerSingleton<ProfileDataSource>(ProfileDataSourceImpl(sl()));
   sl.registerSingleton<VendorOrderDataSource>(OrderVendorDataSourceImpl(sl()));
 
   //! Repository
@@ -73,7 +73,7 @@ Future<void> initializeLocator() async {
   sl.registerSingleton<VendorProductRepository>(VendorProductRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
 
-  sl.registerSingleton<ShopVendorRepository>(ShopVendorRepositoryImpl(sl()));
+  sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl()));
   sl.registerSingleton<OrderVendorRepository>(VendorOrderRepositoryImpl(sl()));
 
   //! UseCase

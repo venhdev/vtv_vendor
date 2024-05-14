@@ -4,10 +4,10 @@ import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 
 import 'features/order/presentation/pages/vendor_order_purchase_page.dart';
-import 'features/vendor/presentation/components/app_drawer.dart';
-import 'features/vendor/presentation/pages/no_permission_page.dart';
-import 'features/vendor/presentation/pages/vendor_home_page.dart';
-import 'features/vendor/presentation/pages/vendor_login_page.dart';
+import 'drawer.dart';
+import 'features/auth/presentation/pages/no_permission_page.dart';
+import 'features/product/presentation/pages/vendor_home_page.dart';
+import 'features/auth/presentation/pages/vendor_login_page.dart';
 
 class VendorApp extends StatelessWidget {
   const VendorApp({super.key});

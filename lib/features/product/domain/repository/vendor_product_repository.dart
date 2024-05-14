@@ -1,7 +1,7 @@
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/home.dart';
 
-import '../../domain/entities/add_product_resp.dart';
+import '../entities/add_product_resp.dart';
 import '../entities/dto/add_update_product_param.dart';
 import '../entities/category_with_nested_children_entity.dart';
 
