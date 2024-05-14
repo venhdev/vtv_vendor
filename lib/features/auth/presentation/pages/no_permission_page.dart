@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vtv_common/auth.dart';
+import 'package:vendor/features/auth/presentation/pages/vendor_register_update_page.dart';
+import 'package:vtv_common/core.dart';
 
 class NoAccessPermissionPage extends StatelessWidget {
   const NoAccessPermissionPage({
@@ -17,17 +17,32 @@ class NoAccessPermissionPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            'Ứng dụng chỉ dành cho người bán hàng',
+            'Hiện tại bạn chưa có quyền truy cập vào ứng dụng. Vui lòng đăng ký để sử dụng dịch vụ.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.black54),
           ),
 
-          //btn logout
+          // register vendor
           ElevatedButton(
-            onPressed: () {
-              context.read<AuthCubit>().logout(refreshToken);
+            onPressed: () async {
+              final isRegistered = await Navigator.of(context).push<bool>(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const VendorRegisterUpdatePage();
+                  },
+                ),
+              );
+
+              if (isRegistered ?? false) {
+                if (!context.mounted) return;
+                showDialogToAlert(
+                  context,
+                  title: const Text('Đăng ký thành công'),
+                  children: [const Text('Vui lòng đăng nhập lại để tiếp tục')],
+                );
+              }
             },
-            child: const Text('Đăng xuất'),
+            child: const Text('Đăng ký bán hàng'),
           ),
         ],
       ),

@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- add/update product
+- register vendor with customer account
+
 ## [v0.0.1-pre] - 20/01/2024
 
 ### Added

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vendor/features/auth/domain/entities/vendor_register_param.dart';
+import 'package:vendor/features/auth/presentation/pages/vendor_register_update_page.dart';
 import 'package:vtv_common/guest.dart';
 import 'package:vtv_common/shop.dart';
 
@@ -45,6 +47,36 @@ class ShopInfoDetailView extends StatelessWidget {
                       builder: (context) {
                         return ShopInfoDetailPage(
                           shopDetail: ok.data!,
+                          bottomActionBuilder: ElevatedButton(
+                            onPressed: () {
+                              final VendorRegisterParam updateParam = VendorRegisterParam(
+                                changeAvatar: false,
+                                name: ok.data!.shop.name,
+                                address: ok.data!.shop.address,
+                                provinceName: ok.data!.shop.provinceName,
+                                districtName: ok.data!.shop.districtName,
+                                wardName: ok.data!.shop.wardName,
+                                phone: ok.data!.shop.phone,
+                                email: ok.data!.shop.email,
+                                avatar: ok.data!.shop.avatar,
+                                description: ok.data!.shop.description,
+                                openTime: ok.data!.shop.openTime,
+                                closeTime: ok.data!.shop.closeTime,
+                                wardCode: ok.data!.shop.wardCode,
+                              );
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return VendorRegisterUpdatePage(
+                                      isUpdate: true,
+                                      initParam: updateParam,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            child: const Text('Chỉnh sửa thông tin cửa hàng'),
+                          ),
                         );
                       },
                     ),

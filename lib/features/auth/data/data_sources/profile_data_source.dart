@@ -48,9 +48,14 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   Future<SuccessResponse<ShopEntity>> registerVendor(VendorRegisterParam param) async {
     final url = baseUri(path: kAPIVendorRegisterURL);
 
+    final formData = FormData.fromMap(await param.toMap());
+
     final response = await _dio.postUri(
       url,
-      data: param.toMap(),
+      data: formData,
+      options: Options(
+        contentType: 'multipart/form-data',
+      ),
     );
 
     return handleDioResponse<ShopEntity, Map<String, dynamic>>(
@@ -64,9 +69,14 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   Future<SuccessResponse<ShopEntity>> updateProfile(VendorRegisterParam param) async {
     final url = baseUri(path: kAPIVendorShopUpdateURL);
 
+    final formData = FormData.fromMap(await param.toMap());
+
     final response = await _dio.putUri(
       url,
-      data: param.toMap(),
+      data: formData,
+      options: Options(
+        contentType: 'multipart/form-data',
+      ),
     );
 
     return handleDioResponse<ShopEntity, Map<String, dynamic>>(

@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:vtv_common/core.dart';
+import 'package:vtv_common/shop.dart';
+
 class VendorRegisterParam {
   final String name;
   final String address;
@@ -31,6 +34,24 @@ class VendorRegisterParam {
     required this.openTime,
     required this.closeTime,
   });
+
+  factory VendorRegisterParam.fromShop(ShopEntity shop) {
+    return VendorRegisterParam(
+      name: shop.name,
+      address: shop.address,
+      provinceName: shop.provinceName,
+      districtName: shop.districtName,
+      wardName: shop.wardName,
+      wardCode: shop.wardCode,
+      phone: shop.phone,
+      email: shop.email,
+      avatar: shop.avatar,
+      changeAvatar: false,
+      description: shop.description,
+      openTime: shop.openTime,
+      closeTime: shop.closeTime,
+    );
+  }
 
   VendorRegisterParam copyWith({
     String? name,
@@ -64,7 +85,7 @@ class VendorRegisterParam {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Future<Map<String, dynamic>> toMap() async {
     return <String, dynamic>{
       'name': name,
       'address': address,
@@ -74,11 +95,12 @@ class VendorRegisterParam {
       'wardCode': wardCode,
       'phone': phone,
       'email': email,
-      'avatar': avatar,
+      // 'avatar': avatar,
+      if (changeAvatar) 'avatar': await FileUtils.getMultiPartFileViaPath(avatar),
       'changeAvatar': changeAvatar,
       'description': description,
-      'openTime': openTime.millisecondsSinceEpoch,
-      'closeTime': closeTime.millisecondsSinceEpoch,
+      'openTime': openTime.toIso8601String(),
+      'closeTime': closeTime.toIso8601String(),
     };
   }
 
