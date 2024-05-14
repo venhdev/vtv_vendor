@@ -22,8 +22,8 @@ const String kAPIVendorProductUpdateStatusURL = '/vendor/product/update/:product
 
 // PATCH
 // /api/vendor/product/restore/{productId}
-const String kAPIVendorProductRestoreURL = '/vendor/product/restore/'; // {productId}
+const String kAPIVendorProductRestoreURL = '/vendor/product/restore/:productId'; // {productId}
 
 // GET
 // /api/vendor/product/page/status/{status}
-const String kAPIVendorProductPageStatusURL = '/vendor/product/page/status/'; // {status}
+const String kAPIVendorProductPageStatusURL = '/vendor/product/page/status/:status'; // {status}

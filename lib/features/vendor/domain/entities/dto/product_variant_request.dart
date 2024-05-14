@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:vtv_common/core.dart';
+import 'package:vtv_common/home.dart';
 
 import 'product_attribute_request.dart';
 
@@ -97,11 +98,24 @@ class ProductVariantRequest {
     );
   }
 
+ factory ProductVariantRequest.fromProductVariant(ProductVariantEntity variant) {
+    return ProductVariantRequest(
+      productVariantId: variant.productVariantId,
+      sku: variant.sku,
+      image: variant.image,
+      changeImage: false, // default to false because this factory is only used for update product
+      originalPrice: variant.originalPrice ?? 0,
+      price: variant.price,
+      quantity: variant.quantity,
+      productAttributeRequests: variant.attributes.map((e) => ProductAttributeRequest.fromProductAttribute(e)).toList(),
+    );
+  }
+
   Future<Map<String, dynamic>> toMap() async {
     return <String, dynamic>{
       'productVariantId': productVariantId,
       'sku': sku,
-      if (image != null) 'image': await FileUtils.getMultiPartFileViaPath(image!),
+      if (image != null && changeImage) 'image': await FileUtils.getMultiPartFileViaPath(image!),
       'changeImage': changeImage,
       'originalPrice': originalPrice,
       'price': price,

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import '../../domain/entities/dto/product_attribute_request.dart';
+import '../../domain/entities/dto/product_variant_request.dart';
 
 class AttributeController {
   //extends ChangeNotifier
@@ -11,6 +12,23 @@ class AttributeController {
     this.attributeGroups,
   );
 
+  factory AttributeController.initFromVariants(List<ProductVariantRequest> variants) {
+    final Map<String, List<String>> attributeGroups = {};
+    for (final variant in variants) {
+      for (final attribute in variant.productAttributeRequests) {
+        // check if the attribute group is already in the list
+        if (attributeGroups.containsKey(attribute.name)) {
+          // check if the attribute value is already in the list >> if not, add it
+          if (!attributeGroups[attribute.name]!.contains(attribute.value)) {
+            attributeGroups[attribute.name]!.add(attribute.value);
+          }
+        } else {
+          attributeGroups[attribute.name] = [attribute.value];
+        }
+      }
+    }
+    return AttributeController(attributeGroups);
+  }
   // the first key is the attribute group name. eg. "Color", "Size"
   // the second key is the attribute value. eg. {"Color": ["Red", "Blue"], "Size": ["XL", "L"]}
   Map<String, List<String>> attributeGroups;

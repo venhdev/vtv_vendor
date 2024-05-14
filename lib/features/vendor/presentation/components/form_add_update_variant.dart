@@ -29,6 +29,7 @@ class _FormAddUpdateVariantState extends State<FormAddUpdateVariant> {
   late ProductVariantRequest _variantParam;
 
   late bool _saved;
+  late bool _currentImageIsNetworkImage; // check if the current image is network image or local device image
 
   void handleEditing() {
     if (!mounted) return;
@@ -43,7 +44,7 @@ class _FormAddUpdateVariantState extends State<FormAddUpdateVariant> {
     if (!mounted) return;
     if (_formKey.currentState!.validate() == false) return;
     final msgValid = _variantParam.isValidMessage(
-      imageRequired: widget.isAddForm,
+      imageRequired: widget.isAddForm, // when add form, image is required
       hasAttribute: widget.initValue.productAttributeRequests.isNotEmpty,
     );
     if (msgValid != '') {
@@ -65,6 +66,7 @@ class _FormAddUpdateVariantState extends State<FormAddUpdateVariant> {
     // log('widget.initValue.sku: ${widget.initValue.sku}');
     // log('widget.initValue.hashCode: ${widget.initValue.hashCode}');
     _variantParam = widget.initValue;
+    _currentImageIsNetworkImage = !widget.isAddForm && widget.initValue.changeImage == false;
 
     _saved = widget.savedTab;
   }
@@ -94,15 +96,6 @@ class _FormAddUpdateVariantState extends State<FormAddUpdateVariant> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // onPressed: () {
-              //   log('save');
-              //   setState(() {
-              //     if (_formKey.currentState!.validate()) {
-              //       widget.onVariantChanged(_variantParam);
-              //       _isEditing = false;
-              //     }
-              //   });
-              // },
               if (!_saved) ...[
                 TextButton.icon(
                   onPressed: null,
@@ -138,9 +131,13 @@ class _FormAddUpdateVariantState extends State<FormAddUpdateVariant> {
                   //# variant image
                   ImagePickerBox(
                     imgUrl: _variantParam.image,
+                    isNetworkImage: _currentImageIsNetworkImage,
                     size: 120.0,
                     onChanged: (newImageUrl) {
-                      _variantParam = _variantParam.copyWith(image: newImageUrl, changeImage: true);
+                      setState(() {
+                        _variantParam = _variantParam.copyWith(image: newImageUrl, changeImage: true);
+                        _currentImageIsNetworkImage = false;
+                      });
                     },
                   ),
                   const SizedBox(height: 8),
@@ -149,16 +146,6 @@ class _FormAddUpdateVariantState extends State<FormAddUpdateVariant> {
                   OutlineTextField(
                     label: 'SKU',
                     controller: TextEditingController(text: _variantParam.sku.isNotEmpty ? _variantParam.sku : null),
-                    // onFieldSubmitted: (value) {
-                    //   if (_formKey.currentState!.validate()) {
-                    //     widget.onVariantChanged(_variantParam);
-                    //     if (_isEditing && mounted) {
-                    //       setState(() {
-                    //         _isEditing = false;
-                    //       });
-                    //     }
-                    //   }
-                    // },
                     onChanged: (value) {
                       _variantParam = _variantParam.copyWith(sku: value);
                       // widget.onChanged(_variantParam);

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:vendor/features/vendor/domain/entities/dto/add_and_update_product_param.dart';
+import 'package:vendor/features/vendor/domain/entities/dto/add_update_product_param.dart';
 import 'package:vendor/features/vendor/presentation/pages/add_update_variants_page.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/home.dart';
@@ -28,10 +28,13 @@ final _emptyVariant = ProductVariantRequest(
 //! validate form bla bla (length, required, etc) --not implemented yet
 
 class AddUpdateProductPage extends StatefulWidget {
-  const AddUpdateProductPage({super.key, this.title});
+  const AddUpdateProductPage({super.key, this.title, this.initParam});
 
   // style properties
   final String? title;
+
+  /// (widget.initParam != null) means this page is used for update product
+  final AddUpdateProductParam? initParam; //use for update
 
   @override
   State<AddUpdateProductPage> createState() => _AddUpdateProductPageState();
@@ -40,15 +43,17 @@ class AddUpdateProductPage extends StatefulWidget {
 class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
   final _formKey = GlobalKey<FormState>();
 
-  late AttributeController _attributeController;
   late AddUpdateProductParam _param;
-
-  bool _isValidVariant = false;
+  late AttributeController _attributeController;
+  late bool _isValidVariant;
 
   // render
   String renderCategoryName = '';
   String _renderBrandName = '';
   // int _numberOfVariants = 1;
+
+  // UX
+  bool _isSendingToServer = false;
 
   void updateAttribute() {
     setState(() {
@@ -74,7 +79,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     });
   }
 
-  Future<void> handleUpdateVariant() async {
+  Future<void> handleChangeAttributeAndUpdateVariant() async {
     log('_attributeController.totalGroupCount > 0: ${_attributeController.totalGroupCount > 0}');
     final newVariants = await Navigator.of(context).push<List<ProductVariantRequest>>(
       MaterialPageRoute(
@@ -82,7 +87,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
           return AddUpdateMultiVariantPage(
             initVariants: _param.productVariantRequests,
             hasAttribute: _attributeController.totalGroupCount > 0,
-            isEdit: false,
+            isAdd: widget.initParam == null,
           );
         },
       ),
@@ -102,21 +107,75 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     }
   }
 
+  Future<void> handleAddProduct() async {
+    setState(() {
+      _isSendingToServer = true;
+    });
+    final respEither = await sl<VendorProductRepository>().addProduct(_param);
+
+    respEither.fold(
+      (error) {
+        Fluttertoast.showToast(msg: error.message ?? 'Thêm sản phẩm thất bại');
+      },
+      (ok) {
+        Fluttertoast.showToast(msg: ok.message ?? 'Thêm sản phẩm thành công');
+        Navigator.of(context).pop();
+      },
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _isSendingToServer = false;
+    });
+  }
+
+  Future<void> handleUpdateProduct() async {
+    setState(() {
+      _isSendingToServer = true;
+    });
+    final respEither = await sl<VendorProductRepository>().updateProduct(_param.productId!, _param);
+
+    respEither.fold(
+      (error) {
+        Fluttertoast.showToast(msg: error.message ?? 'Cập nhật sản phẩm thất bại');
+      },
+      (ok) {
+        Fluttertoast.showToast(msg: ok.message ?? 'Cập nhật sản phẩm thành công');
+        Navigator.of(context).pop(ok.data!);
+      },
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _isSendingToServer = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _param = AddUpdateProductParam(
-      name: '',
-      image: null,
-      changeImage: false,
-      description: '',
-      information: '',
-      categoryId: 0,
-      productVariantRequests: <ProductVariantRequest>[
-        _emptyVariant,
-      ],
-    );
-    _attributeController = AttributeController({});
+    if (widget.initParam != null) {
+      //! update
+      _param = widget.initParam!;
+      // renderCategoryName = 'fake';
+      _attributeController = AttributeController.initFromVariants(_param.productVariantRequests);
+      _isValidVariant = true;
+    } else {
+      //! add new
+      _param = AddUpdateProductParam(
+        name: '',
+        image: null,
+        changeImage: false,
+        description: '',
+        information: '',
+        categoryId: 0,
+        productVariantRequests: <ProductVariantRequest>[
+          _emptyVariant,
+        ],
+      );
+      _attributeController = AttributeController({});
+      _isValidVariant = false;
+    }
   }
 
   @override
@@ -135,9 +194,12 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                 //# product image
                 ImagePickerBox(
                   imgUrl: _param.image,
+                  isNetworkImage: widget.initParam != null && _param.changeImage == false,
                   size: 120.0,
                   onChanged: (newImageUrl) {
-                    _param = _param.copyWith(image: newImageUrl, changeImage: true);
+                    setState(() {
+                      _param = _param.copyWith(image: newImageUrl, changeImage: true);
+                    });
                   },
                 ),
                 const SizedBox(height: 12.0),
@@ -146,6 +208,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                 OutlineTextField(
                   label: 'Tên sản phẩm',
                   maxLines: 1,
+                  controller: TextEditingController(text: _param.name),
                   onChanged: (value) {
                     _param = _param.copyWith(name: value);
                   },
@@ -162,6 +225,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                 OutlineTextField(
                   label: 'Thông tin sản phẩm',
                   isRequired: true,
+                  controller: TextEditingController(text: _param.information),
                   maxLines: 4,
                   onChanged: (value) {
                     // _param.information = value;
@@ -174,6 +238,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                 OutlineTextField(
                   label: 'Mô tả sản phẩm',
                   maxLines: 4,
+                  controller: TextEditingController(text: _param.description),
                   onChanged: (value) {
                     // _param.description = value;
                     _param = _param.copyWith(description: value);
@@ -189,24 +254,40 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
                 //# product category
                 AddUpdateProductField(
-                  isRequired: true,
-                  suffixIcon: const Icon(Icons.edit),
-                  onPressed: () async {
-                    final category = await showDialog<CategoryEntity>(
-                      context: context,
-                      builder: (context) => const CategoryPickerDialog(),
-                    );
+                    isRequired: true,
+                    suffixIcon: const Icon(Icons.edit),
+                    onPressed: () async {
+                      final category = await showDialog<CategoryEntity>(
+                        context: context,
+                        builder: (context) => const CategoryPickerDialog(),
+                      );
 
-                    if (category != null) {
-                      setState(() {
-                        // _param.categoryId = category.categoryId;
-                        _param = _param.copyWith(categoryId: category.categoryId);
-                        renderCategoryName = category.name;
-                      });
-                    }
-                  },
-                  child: Text('Danh mục: $renderCategoryName', style: const TextStyle(fontSize: 16)),
-                ),
+                      if (category != null) {
+                        setState(() {
+                          // _param.categoryId = category.categoryId;
+                          _param = _param.copyWith(categoryId: category.categoryId);
+                          renderCategoryName = category.name;
+                        });
+                      }
+                    },
+                    child: renderCategoryName.isNotEmpty
+                        ? Text('Danh mục: $renderCategoryName', style: const TextStyle(fontSize: 16))
+                        : Text('Danh mục: ${_param.categoryId}', style: const TextStyle(fontSize: 16))
+                    // : FutureBuilder(
+                    //   future: sl<GuestRepository>().getcategory,
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.hasData) {
+                    //       final resultEither = snapshot.data!;
+                    //       return const Placeholder();
+                    //     } else if (snapshot.hasError) {
+                    //       return MessageScreen.error(snapshot.error.toString());
+                    //     }
+                    //     return const Center(
+                    //       child: CircularProgressIndicator(),
+                    //     );
+                    //   },
+                    // ),
+                    ),
 
                 //# product brand
                 AddUpdateProductField(
@@ -231,7 +312,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                   ),
                 ),
 
-                //# variants form
+                //# redirect to variants form
                 Wrapper(
                   label: const WrapperLabel(icon: Icons.view_comfy_alt, labelText: 'Biến thể sản phẩm'),
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -256,7 +337,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                               ),
                         suffixLabel: //# set variant button
                             TextButton(
-                          onPressed: () async => await handleUpdateVariant(),
+                          onPressed: () async => await handleChangeAttributeAndUpdateVariant(),
                           child: const Text('Cài đặt biến thể'),
                         ),
                       ),
@@ -284,21 +365,22 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                 const Divider(),
                 _isValidVariant
                     ? ElevatedButton(
-                        onPressed: _param.productVariantRequests.length == _attributeController.totalVariantCount
-                            ? () async {
-                                final respEither = await sl<VendorProductRepository>().addProduct(_param);
+                        //? when add: the length must be equal to totalVariantCount
+                        //? when update: maybe the length is not equal to totalVariantCount << previous add method not required to fill all variants
+                        // onPressed: (_param.productVariantRequests.length == _attributeController.totalVariantCount)
+                        //     ? handleAddProduct
+                        //     : widget.initParam != null
+                        //         ? handleUpdateProduct
+                        //         : null,
 
-                                respEither.fold(
-                                  (error) {
-                                    Fluttertoast.showToast(msg: error.message ?? 'Thêm sản phẩm thất bại');
-                                  },
-                                  (ok) {
-                                    Fluttertoast.showToast(msg: ok.message ?? 'Thêm sản phẩm thành công');
-                                  },
-                                );
-                              }
-                            : null,
-                        child: const Text('Thêm sản phẩm'),
+                        onPressed: widget.initParam != null
+                          ? handleUpdateProduct
+                          : _param.productVariantRequests.length == _attributeController.totalVariantCount
+                            ? handleAddProduct
+                            : null, //! prevent user to add product when not enough variant
+                        child: _isSendingToServer
+                            ? const CircularProgressIndicator()
+                            : Text(widget.initParam != null ? 'Lưu chỉnh sửa' : 'Thêm sản phẩm'),
                       )
                     : const Text('Vui lòng nhập đủ thông tin biến thể sản phẩm'),
               ],
@@ -377,8 +459,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                                   title: 'Lưu ý',
                                   content:
                                       'Khi xóa thuộc tính, toàn bộ biến thể sẽ bị xóa. Bạn có chắc chắn muốn xóa không?',
-                                  confirmText: 'xóa',
-                                  dismissText: 'Hủy bỏ',
+                                  confirmText: 'Xác nhận xóa',
+                                  dismissText: 'Hủy',
                                 );
 
                                 if (isConfirmDelete ?? false) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:vtv_common/core.dart';
+import 'package:vtv_common/home.dart';
 
 import 'product_variant_request.dart';
 
@@ -17,7 +18,7 @@ class AddUpdateProductParam {
   final int? brandId;
   final List<ProductVariantRequest> productVariantRequests;
 
- const AddUpdateProductParam({
+  const AddUpdateProductParam({
     this.productId,
     required this.name,
     this.image,
@@ -28,30 +29,6 @@ class AddUpdateProductParam {
     this.brandId,
     required this.productVariantRequests,
   });
-
-  // AddUpdateProductParam copyWith({
-  //   int? productId,
-  //   String? name,
-  //   String? image,
-  //   bool? changeImage,
-  //   String? description,
-  //   String? information,
-  //   int? categoryId,
-  //   int? brandId,
-  //   List<ProductVariantRequest>? productVariantRequests,
-  // }) {
-  //   return AddUpdateProductParam(
-  //     productId: productId ?? this.productId,
-  //     name: name ?? this.name,
-  //     image: image ?? this.image,
-  //     changeImage: changeImage ?? this.changeImage,
-  //     description: description ?? this.description,
-  //     information: information ?? this.information,
-  //     categoryId: categoryId ?? this.categoryId,
-  //     brandId: brandId ?? this.brandId,
-  //     productVariantRequests: productVariantRequests ?? this.productVariantRequests,
-  //   );
-  // }
 
   Future<Map<String, dynamic>> toMap() async {
     return <String, dynamic>{
@@ -77,28 +54,40 @@ class AddUpdateProductParam {
     return baseMap;
   }
 
-  // factory AddAndUpdateProductParam.fromMap(Map<String, dynamic> map) {
-  //   return AddAndUpdateProductParam(
-  //     productId: map['productId'] as int,
-  //     name: map['name'] as String,
-  //     image: map['image'] != null ? map['image'] as String : null,
-  //     changeImage: map['changeImage'] as bool,
-  //     description: map['description'] as String,
-  //     information: map['information'] as String,
-  //     categoryId: map['categoryId'] as int,
-  //     brandId: map['brandId'] != null ? map['brandId'] as int : null,
-  //     productVariantRequests: List<ProductVariantRequest>.from(
-  //       (map['productVariantRequests'] as List<int>).map<ProductVariantRequest>(
-  //         (x) => ProductVariantRequest.fromMap(x as Map<String, dynamic>),
-  //       ),
-  //     ),
-  //   );
-  // }
+  factory AddUpdateProductParam.fromProduct(ProductEntity product) {
+    return AddUpdateProductParam(
+      productId: product.productId,
+      name: product.name,
+      image: product.image,
+      changeImage: false,
+      description: product.description,
+      information: product.information,
+      categoryId: product.categoryId,
+      brandId: product.brandId,
+      productVariantRequests: product.productVariants.map((e) => ProductVariantRequest.fromProductVariant(e)).toList(),
+    );
+
+    // return AddUpdateProductParam(
+    //   productId: map['productId'] as int,
+    //   name: map['name'] as String,
+    //   image: map['image'] != null ? map['image'] as String : null,
+    //   changeImage: map['changeImage'] as bool,
+    //   description: map['description'] as String,
+    //   information: map['information'] as String,
+    //   categoryId: map['categoryId'] as int,
+    //   brandId: map['brandId'] != null ? map['brandId'] as int : null,
+    //   productVariantRequests: List<ProductVariantRequest>.from(
+    //     (map['productVariantRequests'] as List<int>).map<ProductVariantRequest>(
+    //       (x) => ProductVariantRequest.fromMap(x as Map<String, dynamic>),
+    //     ),
+    //   ),
+    // );
+  }
 
   String toJson() => json.encode(toMap());
 
-  // factory AddAndUpdateProductParam.fromJson(String source) =>
-  //     AddAndUpdateProductParam.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory AddUpdateProductParam.fromJson(String source) =>
+  //     AddUpdateProductParam.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

@@ -13,14 +13,14 @@ class AddUpdateMultiVariantPage extends StatefulWidget {
     super.key,
     required this.initVariants,
     required this.hasAttribute,
-    this.isEdit = false,
+    required this.isAdd,
   });
 
   // final ValueChanged<List<ProductVariantRequest>> onVariantsChanged;
   final List<ProductVariantRequest> initVariants;
   final bool hasAttribute;
 
-  final bool isEdit;
+  final bool isAdd;
 
   @override
   State<AddUpdateMultiVariantPage> createState() => _AddUpdateMultiVariantPageState();
@@ -127,7 +127,7 @@ class _AddUpdateMultiVariantPageState extends State<AddUpdateMultiVariantPage> {
               for (int i = 0; i < _variants.length; i++)
                 SingleChildScrollView(
                   child: FormAddUpdateVariant(
-                    isAddForm: true,
+                    isAddForm: widget.isAdd,
                     initValue: _variants[i],
                     savedTab: savedTab,
                     onSavedChanged: (isSaved) {
