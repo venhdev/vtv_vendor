@@ -11,7 +11,8 @@ class AuthVendorInterceptor extends QueuedInterceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     //> add accessToken if needed
-    if (options.path.contains('/vendor')) {
+    //? some url need /customer: notification, register vendor
+    if (options.path.contains('/vendor') || options.path.contains('/customer')) {
       final token = await sl<SecureStorageHelper>().accessToken;
       options.headers.addAll(baseHttpHeaders(accessToken: token));
     } else {

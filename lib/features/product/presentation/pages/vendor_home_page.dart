@@ -9,7 +9,9 @@ import 'add_update_product_page.dart';
 import 'vendor_product_page.dart';
 
 class VendorHomePage extends StatefulWidget {
-  const VendorHomePage({super.key});
+  const VendorHomePage({super.key, required this.onItemTapped});
+
+  final void Function(int index) onItemTapped;
 
   @override
   State<VendorHomePage> createState() => _VendorHomePageState();
@@ -25,6 +27,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
+          //# shop profile
           FutureBuilder(
             future: sl<ProfileRepository>().getShopProfile(),
             builder: (context, snapshot) {
@@ -43,10 +46,11 @@ class _VendorHomePageState extends State<VendorHomePage> {
               );
             },
           ),
-          //! this will make the widget rebuild when setState is called
-          // ignore: prefer_const_constructors
-          OrderPurchaseTracking(),
+          //# order tracking
+          const OrderPurchaseTracking(), //> use const will avoid rebuild
           const SizedBox(height: 8),
+
+          //# menu action
           Wrapper(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             child: Wrap(
@@ -70,6 +74,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
                     ),
                   );
                 }),
+                MenuItem('Quản lý Voucher', Icons.card_giftcard, onPressed: () => widget.onItemTapped(2)),
               ],
             ),
           ),

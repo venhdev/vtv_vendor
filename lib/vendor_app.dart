@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vendor/features/notification/presentation/pages/vendor_notification_page.dart';
+import 'package:vendor/features/vendor/presentation/vendor_wallet_history_page.dart';
 import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 
-import 'features/order/presentation/pages/vendor_order_purchase_page.dart';
-import 'drawer.dart';
+import 'features/voucher/presentation/pages/add_update_voucher_page.dart';
+import 'features/voucher/presentation/pages/vendor_voucher_manage_page.dart';
+import 'vendor_drawer.dart';
 import 'features/auth/presentation/pages/no_permission_page.dart';
-import 'features/product/presentation/pages/vendor_home_page.dart';
 import 'features/auth/presentation/pages/vendor_login_page.dart';
+import 'features/product/presentation/pages/vendor_home_page.dart';
 
 class VendorApp extends StatelessWidget {
   const VendorApp({super.key});
@@ -31,10 +34,7 @@ class AppScaffold extends StatefulWidget {
 
 class _AppScaffoldState extends State<AppScaffold> {
   int _selectedIndex = 0;
-  static final List<Widget> _widgetOptions = <Widget>[
-    const VendorHomePage(),
-    const VendorOrderPurchasePage(),
-  ];
+  late List<Widget> _widgetOptions;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,34 +47,78 @@ class _AppScaffoldState extends State<AppScaffold> {
       case 0:
         return 'Vendor App';
       case 1:
-        return '----';
+        return 'Ví tiền';
+      case 2:
+        return 'Voucher của shop';
       default:
         throw Exception('Invalid index');
     }
   }
 
+  List<Widget>? _actions(int index) {
+    switch (index) {
+      case 0:
+        return [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const VendorNotificationPage();
+                  },
+                ),
+              );
+            },
+          ),
+        ];
+      default:
+        return null;
+    }
+  }
+
+  Widget? _floatingActionButton(int index) {
+    switch (index) {
+      case 2:
+        return FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return const AddUpdateVoucherPage();
+                },
+              ),
+            );
+          },
+          child: const Icon(Icons.add),
+        );
+      default:
+        return null;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _widgetOptions = <Widget>[
+      VendorHomePage(onItemTapped: _onItemTapped),
+      const VendorWalletHistoryPage(),
+      const VendorVoucherManagePage(),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(
+      drawer: VendorDrawer(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
       appBar: AppBar(
         title: Text(_appTitle(_selectedIndex)),
-        // actions: const [
-        //   // chat
-        //   IconButton(
-        //     icon: Icon(Icons.chat),
-        //     onPressed: null,
-        //   ),
-        //   // notification
-        //   IconButton(
-        //     icon: Icon(Icons.notifications),
-        //     onPressed: null, // TODO chat
-        //   ),
-        // ],
+        actions: _actions(_selectedIndex),
       ),
+      floatingActionButton: _floatingActionButton(_selectedIndex),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.message != null) {

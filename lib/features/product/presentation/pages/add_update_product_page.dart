@@ -183,6 +183,17 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title ?? 'Thêm sản phẩm mới'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            final isConfirm = await showDialogToConfirm(
+              context: context,
+              title: 'Lưu ý',
+              content: 'Bạn có chắc chắn muốn thoát không?',
+            );
+            if ((isConfirm ?? false) && context.mounted) Navigator.of(context).pop();
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Wrapper(
@@ -374,10 +385,10 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                         //         : null,
 
                         onPressed: widget.initParam != null
-                          ? handleUpdateProduct
-                          : _param.productVariantRequests.length == _attributeController.totalVariantCount
-                            ? handleAddProduct
-                            : null, //! prevent user to add product when not enough variant
+                            ? handleUpdateProduct
+                            : _param.productVariantRequests.length == _attributeController.totalVariantCount
+                                ? handleAddProduct
+                                : null, //! prevent user to add product when not enough variant
                         child: _isSendingToServer
                             ? const CircularProgressIndicator()
                             : Text(widget.initParam != null ? 'Lưu chỉnh sửa' : 'Thêm sản phẩm'),

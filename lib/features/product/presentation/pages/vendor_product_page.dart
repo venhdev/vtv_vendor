@@ -96,12 +96,12 @@ class TabViewByStatus extends StatefulWidget {
 }
 
 class _TabViewByStatusState extends State<TabViewByStatus> {
-  late LazyController<ProductEntity> lazyController;
+  late LazyListController<ProductEntity> lazyController;
 
   @override
   void initState() {
     super.initState();
-    lazyController = LazyController<ProductEntity>(
+    lazyController = LazyListController<ProductEntity>(
       items: [],
       paginatedData: (page) => paginatedDataByStatus(widget.status, page),
       scrollController: ScrollController(),
@@ -117,7 +117,7 @@ class _TabViewByStatusState extends State<TabViewByStatus> {
       onRefresh: () async {
         lazyController.refresh();
       },
-      child: LazyLoadBuilder<ProductEntity>(
+      child: LazyListBuilder<ProductEntity>(
         lazyController: lazyController,
         itemBuilder: (context, index, data) => VendorProductItem(
           product: data,

@@ -12,7 +12,7 @@ import '../../domain/entities/vendor_register_param.dart';
 import '../../domain/repository/profile_repository.dart';
 
 //TODO:
-// 1. still can change phone.... 
+// 1. still can change phone....
 
 class VendorRegisterUpdatePage extends StatefulWidget {
   const VendorRegisterUpdatePage({super.key, this.isUpdate = false, this.initParam});
@@ -205,6 +205,7 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
 
                 // phone
                 OutlineTextField(
+                  readOnly: widget.initParam != null,
                   controller: _phoneController,
                   label: 'Số điện thoại',
                   keyboardType: TextInputType.phone,
@@ -212,6 +213,7 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
                 const SizedBox(height: 8),
 
                 OutlineTextField(
+                  readOnly: widget.initParam != null,
                   controller: _emailController,
                   label: 'Email',
                   keyboardType: TextInputType.emailAddress,

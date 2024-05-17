@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
@@ -36,10 +34,8 @@ class _OrderPurchaseTrackingState extends State<OrderPurchaseTracking> {
           if (snapshot.data!.any((resp) => resp.isLeft())) {
             return const SizedBox.shrink();
           }
-
           return _trackingInfo(context, dataList: snapshot.data!);
         } else {
-          log('[OrderPurchaseTracking] snapshot.data: ${snapshot.data}');
           return const Center(
             child: Text(
               'Đang tải dữ liệu đơn hàng...',

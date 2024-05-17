@@ -8,8 +8,8 @@ import 'package:vtv_common/dev.dart';
 
 import 'service_locator.dart';
 
-class AppDrawer extends StatefulWidget {
-  const AppDrawer({
+class VendorDrawer extends StatefulWidget {
+  const VendorDrawer({
     super.key,
     required this.onItemTapped,
     required this.selectedIndex,
@@ -19,10 +19,10 @@ class AppDrawer extends StatefulWidget {
   final void Function(int index) onItemTapped;
 
   @override
-  State<AppDrawer> createState() => _AppDrawerState();
+  State<VendorDrawer> createState() => _VendorDrawerState();
 }
 
-class _AppDrawerState extends State<AppDrawer> {
+class _VendorDrawerState extends State<VendorDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,17 +30,43 @@ class _AppDrawerState extends State<AppDrawer> {
         padding: EdgeInsets.zero,
         children: [
           drawerHeader(),
+          //# home page
           ListTile(
-            title: const Text('Tổng quan cửa hàng'),
+            title: const Text('Trang bán hàng'),
             selected: widget.selectedIndex == 0,
             onTap: () {
               widget.onItemTapped(0);
               Navigator.pop(context);
             },
           ),
+          //# wallet page
+          ListTile(
+            title: const Text('Ví tiền'),
+            selected: widget.selectedIndex == 1,
+            onTap: () {
+              widget.onItemTapped(1);
+              Navigator.pop(context);
+            },
+          ), 
+
+          //# voucher manage page
+          ListTile(
+            title: const Text('Quản lý voucher của shop'),
+            selected: widget.selectedIndex == 2,
+            onTap: () {
+              widget.onItemTapped(2);
+              Navigator.pop(context);
+            },
+          ),
 
           // NOTE dev
           const Divider(),
+          ListTile(
+            title: const Text('Thông tin ứng dụng'),
+            onTap: () async {
+              showCrossPlatformAboutDialog(context: context);
+            },
+          ),
           ListTile(
             title: const Text('Dev Page'),
             onTap: () {

@@ -29,9 +29,9 @@ void main() async {
   if (savedHost != null) {
     host = savedHost;
   } else {
-    final curHost = await DevUtils.initHostWithCurrentIPv4();
+    final curHost = await DevUtils.initHostWithCurrentIPv4('192.168.1.100');
     if (curHost != null) {
-      host = curHost;
+      // host = curHost; // already set in initHostWithCurrentIPv4
       sl<SharedPreferencesHelper>().I.setString('host', curHost);
     }
   }

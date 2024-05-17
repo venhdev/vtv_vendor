@@ -13,6 +13,9 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
 
 import 'config/dio/auth_vendor_interceptor.dart';
+import 'features/notification/data/data_sources/vendor_notification_data_source.dart';
+import 'features/notification/data/repository/vendor_notification_repository_impl.dart';
+import 'features/notification/domain/repository/vendor_notification_repository.dart';
 import 'features/order/data/data_sources/vendor_order_data_source.dart';
 import 'features/order/data/repository/vendor_order_repository_impl.dart';
 import 'features/order/domain/repository/order_vendor_repository.dart';
@@ -21,6 +24,11 @@ import 'features/auth/domain/repository/profile_repository.dart';
 import 'features/product/data/data_sources/vendor_product_data_source.dart';
 import 'features/product/data/repository/vendor_product_repository_impl.dart';
 import 'features/product/domain/repository/vendor_product_repository.dart';
+import 'features/vendor/data/data_sources/vendor_data_source.dart';
+import 'features/vendor/data/repository/vendor_repository_impl.dart';
+import 'features/vendor/domain/repository/vendor_repository.dart';
+import 'features/voucher/data/data_sources/voucher_data_source.dart';
+import 'features/voucher/domain/repository/voucher_repository.dart';
 
 // Service locator
 GetIt sl = GetIt.instance;
@@ -62,16 +70,22 @@ Future<void> initializeLocator() async {
 
   //! Data source
   sl.registerSingleton<GuestDataSource>(GuestDataSourceImpl(sl()));
+  sl.registerSingleton<VendorNotificationDataSource>(VendorNotificationDataSourceImpl(sl()));
   sl.registerSingleton<VendorProductDataSource>(VendorProductDataSourceImpl(sl()));
   sl.registerSingleton<AuthDataSource>(AuthDataSourceImpl(sl(), sl(), sl(), sl()));
+  sl.registerSingleton<VoucherDataSource>(VoucherDataSourceImpl(sl()));
 
   sl.registerSingleton<ProfileDataSource>(ProfileDataSourceImpl(sl()));
+  sl.registerSingleton<VendorDataSource>(VendorDataSourceImpl(sl()));
   sl.registerSingleton<VendorOrderDataSource>(OrderVendorDataSourceImpl(sl()));
 
   //! Repository
   sl.registerSingleton<GuestRepository>(GuestRepositoryImpl(sl()));
-  sl.registerSingleton<VendorProductRepository>(VendorProductRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<VendorRepository>(VendorRepositoryImpl(sl()));
+  sl.registerSingleton<VendorProductRepository>(VendorProductRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<VoucherRepository>(VoucherRepositoryImpl(sl()));
+  sl.registerSingleton<VendorNotificationRepository>(VendorNotificationRepositoryImpl(sl()));
 
   sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl()));
   sl.registerSingleton<OrderVendorRepository>(VendorOrderRepositoryImpl(sl()));

@@ -145,12 +145,6 @@ class VendorProductDataSourceImpl implements VendorProductDataSource {
     for (int i = 0; i < updateParam.productVariantRequests.length; i++) {
       var variant = updateParam.productVariantRequests[i];
 
-      //? change 'image' field to null when changeImage is false
-      //> prevent getMultiPartFileViaPath from network url. this case occurs when update product
-      // if (variant.changeImage == false) {
-      //   variant = variant.copyWith(image: null);
-      // }
-
       final entries = ConversionUtils.flattenObjectWithPrefixIndex(
         await variant.toMap(),
         index: i,

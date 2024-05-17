@@ -15,7 +15,7 @@ class AddProductResp {
   final String shopName;
   final String shopAvatar;
   final int countOrder;
-  final ProductEntity productDto;
+  final ProductEntity product;
 
   AddProductResp({
     required this.status,
@@ -29,7 +29,7 @@ class AddProductResp {
     required this.shopName,
     required this.shopAvatar,
     required this.countOrder,
-    required this.productDto,
+    required this.product,
   });
 
   AddProductResp copyWith({
@@ -58,7 +58,7 @@ class AddProductResp {
       shopName: shopName ?? this.shopName,
       shopAvatar: shopAvatar ?? this.shopAvatar,
       countOrder: countOrder ?? this.countOrder,
-      productDto: productDto ?? this.productDto,
+      product: productDto ?? this.product,
     );
   }
 
@@ -75,7 +75,7 @@ class AddProductResp {
       'shopName': shopName,
       'shopAvatar': shopAvatar,
       'countOrder': countOrder,
-      'productDto': productDto.toMap(),
+      'productDto': product.toMap(),
     };
   }
 
@@ -92,7 +92,7 @@ class AddProductResp {
       shopName: map['shopName'] as String,
       shopAvatar: map['shopAvatar'] as String,
       countOrder: map['countOrder'] as int,
-      productDto: ProductEntity.fromMap(map['productDTO'] as Map<String, dynamic>),
+      product: ProductEntity.fromMap(map['productDTO'] as Map<String, dynamic>),
     );
   }
 
@@ -102,7 +102,7 @@ class AddProductResp {
 
   @override
   String toString() {
-    return 'ProductAddResp(status: $status, message: $message, code: $code, categoryId: $categoryId, categoryName: $categoryName, categoryParentId: $categoryParentId, categoryParentName: $categoryParentName, shopId: $shopId, shopName: $shopName, shopAvatar: $shopAvatar, countOrder: $countOrder, productDto: $productDto)';
+    return 'ProductAddResp(status: $status, message: $message, code: $code, categoryId: $categoryId, categoryName: $categoryName, categoryParentId: $categoryParentId, categoryParentName: $categoryParentName, shopId: $shopId, shopName: $shopName, shopAvatar: $shopAvatar, countOrder: $countOrder, productDto: $product)';
   }
 
   @override
@@ -120,7 +120,7 @@ class AddProductResp {
         other.shopName == shopName &&
         other.shopAvatar == shopAvatar &&
         other.countOrder == countOrder &&
-        other.productDto == productDto;
+        other.product == product;
   }
 
   @override
@@ -136,6 +136,6 @@ class AddProductResp {
         shopName.hashCode ^
         shopAvatar.hashCode ^
         countOrder.hashCode ^
-        productDto.hashCode;
+        product.hashCode;
   }
 }

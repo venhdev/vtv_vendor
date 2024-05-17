@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 - add/update product
 - register vendor with customer account
+- notification
+- add/update voucher
 
 ## [v0.0.1-pre] - 20/01/2024
 

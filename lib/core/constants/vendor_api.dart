@@ -42,3 +42,22 @@ const String kAPIVendorProductRestoreURL = '/vendor/product/restore/:productId';
 // /api/vendor/product/page/status/{status}
 const String kAPIVendorProductPageStatusURL = '/vendor/product/page/status/:status'; // {status}
 
+//# voucher-shop-controller
+const String kAPIVoucherUpdateURL = '/vendor/shop/voucher/update';
+const String kAPIVoucherAddURL = '/vendor/shop/voucher/add';
+const String kAPIVoucherUpdateStatusURL = '/vendor/shop/voucher/update-status/:voucherId'; // {voucherId}
+const String kAPIVoucherGetAllURL = '/vendor/shop/voucher/get-all-shop';
+const String kAPIVoucherGetAllByTypeURL = '/vendor/shop/voucher/get-all-shop-type';
+const String kAPIVoucherGetAllByStatusURL = '/vendor/shop/voucher/get-all-shop-status';
+const String kAPIVoucherDetailURL = '/vendor/shop/voucher/detail/:voucherId'; // {voucherId}
+
+//! same API with customer
+//# wallet-controller
+// GET
+// /api/customer/wallet/get
+const String kAPIWalletGetURL = '/customer/wallet/get'; //this use for both vendor and customer
+
+//# notification-controller
+const String kAPINotificationGetPageURL = '/customer/notification/get-page'; // GET
+const String kAPINotificationReadURL = '/customer/notification/read'; // PUT /{notificationId}
+const String kAPINotificationDeleteURL = '/customer/notification/delete'; // DELETE /{notificationId}
