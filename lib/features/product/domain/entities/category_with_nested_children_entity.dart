@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:vtv_common/home.dart';
@@ -11,11 +10,11 @@ class CategoryWithNestedChildrenEntity {
   });
 
   final CategoryEntity parent;
-  final List<CategoryEntity> children;
+  final List<CategoryWithNestedChildrenEntity> children;
 
   CategoryWithNestedChildrenEntity copyWith({
     CategoryEntity? parent,
-    List<CategoryEntity>? children,
+    List<CategoryWithNestedChildrenEntity>? children,
   }) {
     return CategoryWithNestedChildrenEntity(
       parent: parent ?? this.parent,
@@ -23,19 +22,19 @@ class CategoryWithNestedChildrenEntity {
     );
   }
 
-  factory CategoryWithNestedChildrenEntity.fromMap(Map<String, dynamic> map) {
-    return CategoryWithNestedChildrenEntity(
-      parent: CategoryEntity.fromMap(map['parent'] as Map<String, dynamic>),
-      children: List<CategoryEntity>.from(
-        (map['children'] as List<dynamic>).map<CategoryEntity>(
-          (x) => CategoryEntity.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-    );
-  }
+  // factory CategoryWithNestedChildrenEntity.fromMap(Map<String, dynamic> map) {
+  //   return CategoryWithNestedChildrenEntity(
+  //     parent: CategoryEntity.fromMap(map['parent'] as Map<String, dynamic>),
+  //     children: List<CategoryWithNestedChildrenEntity>.from(
+  //       (map['children'] as List<dynamic>).map<CategoryEntity>(
+  //         (x) => CategoryEntity.fromMap(x as Map<String, dynamic>),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  factory CategoryWithNestedChildrenEntity.fromJson(String source) =>
-      CategoryWithNestedChildrenEntity.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory CategoryWithNestedChildrenEntity.fromJson(String source) =>
+  //     CategoryWithNestedChildrenEntity.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'CategoryWithNestedChildrenEntity(parent: $parent, children: $children)';

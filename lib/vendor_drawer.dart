@@ -47,7 +47,7 @@ class _VendorDrawerState extends State<VendorDrawer> {
               widget.onItemTapped(1);
               Navigator.pop(context);
             },
-          ), 
+          ),
 
           //# voucher manage page
           ListTile(
@@ -64,7 +64,9 @@ class _VendorDrawerState extends State<VendorDrawer> {
           ListTile(
             title: const Text('Thông tin ứng dụng'),
             onTap: () async {
-              showCrossPlatformAboutDialog(context: context);
+              showCrossPlatformAboutDialog(
+                  context: context,
+                  children: [const SizedBox(height: 16), const Text('Ứng dụng dành cho người bán hàng')]);
             },
           ),
           ListTile(

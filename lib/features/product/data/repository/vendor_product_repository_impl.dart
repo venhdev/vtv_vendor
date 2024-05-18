@@ -21,6 +21,35 @@ class VendorProductRepositoryImpl implements VendorProductRepository {
 
   @override
   FRespData<List<CategoryWithNestedChildrenEntity>> getCategoryWithNestedChildren() async {
+    Future<List<CategoryWithNestedChildrenEntity>> getNestedChildrenOfCategory(int categoryId) async {
+      List<CategoryWithNestedChildrenEntity> rs = [];
+
+      final children = await _guestDataSource.getAllCategoryByParent(categoryId);
+
+      // get list of children categories (when children is empty, it means it's a leaf node)
+      await Future.wait(children.data!.map((parent) async {
+        final children = await _guestDataSource.getAllCategoryByParent(parent.categoryId);
+
+        if (children.data!.isEmpty) {
+          return rs.add(
+            CategoryWithNestedChildrenEntity(
+              parent: parent,
+              children: [],
+            ),
+          );
+        } else {
+          return rs.add(
+            CategoryWithNestedChildrenEntity(
+              parent: parent,
+              children: await getNestedChildrenOfCategory(categoryId),
+            ),
+          );
+        }
+      }));
+
+      return rs;
+    }
+
     try {
       final List<CategoryWithNestedChildrenEntity> result = [];
       // get list of parent categories
@@ -29,12 +58,34 @@ class VendorProductRepositoryImpl implements VendorProductRepository {
       // get list of children categories (when children is empty, it means it's a leaf node)
       await Future.wait(parentCategories.data!.map((parent) async {
         final children = await _guestDataSource.getAllCategoryByParent(parent.categoryId);
-        result.add(
-          CategoryWithNestedChildrenEntity(
-            parent: parent,
-            children: children.data!,
-          ),
-        );
+
+        if (children.data!.isEmpty) {
+          return result.add(
+            CategoryWithNestedChildrenEntity(
+              parent: parent,
+              children: [],
+            ),
+          );
+        } else {
+          // for each children, get list of nested children
+          List<CategoryWithNestedChildrenEntity> childrenList = [];
+
+          await Future.wait(children.data!.map((child) async {
+            childrenList.add(
+              CategoryWithNestedChildrenEntity(
+                parent: child,
+                children: await getNestedChildrenOfCategory(child.categoryId),
+              ),
+            );
+          }));
+
+          result.add(
+            CategoryWithNestedChildrenEntity(
+              parent: parent,
+              children: childrenList,
+            ),
+          );
+        }
       }));
 
       return Right(SuccessResponse(

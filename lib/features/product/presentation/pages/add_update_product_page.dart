@@ -5,15 +5,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vendor/features/product/domain/entities/dto/add_update_product_param.dart';
 import 'package:vendor/features/product/presentation/pages/add_update_variants_page.dart';
 import 'package:vtv_common/core.dart';
-import 'package:vtv_common/home.dart';
 
 import '../../../../service_locator.dart';
+import '../../domain/entities/category_with_nested_children_entity.dart';
 import '../../domain/entities/dto/product_variant_request.dart';
 import '../../domain/repository/vendor_product_repository.dart';
 import '../components/add_update_attribute_dialog.dart';
 import '../components/add_update_product_field.dart';
 import '../components/attribute_controller.dart';
-import '../components/category_picker_dialog.dart';
+import 'category_picker_page.dart';
 
 final _emptyVariant = ProductVariantRequest(
   sku: '',
@@ -28,10 +28,7 @@ final _emptyVariant = ProductVariantRequest(
 //! validate form bla bla (length, required, etc) --not implemented yet
 
 class AddUpdateProductPage extends StatefulWidget {
-  const AddUpdateProductPage({super.key, this.title, this.initParam});
-
-  // style properties
-  final String? title;
+  const AddUpdateProductPage({super.key, this.initParam});
 
   /// (widget.initParam != null) means this page is used for update product
   final AddUpdateProductParam? initParam; //use for update
@@ -182,7 +179,8 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title ?? 'Thêm sản phẩm mới'),
+        // title: Text(widget.initParam == null ? 'Thêm sản phẩm mới' : 'Cập nhật sản phẩm'),
+        title: Text(widget.initParam != null ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm mới'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () async {
@@ -235,6 +233,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                 //# product information
                 OutlineTextField(
                   label: 'Thông tin sản phẩm',
+                  readOnly: true,
                   isRequired: true,
                   controller: TextEditingController(text: _param.information),
                   maxLines: 4,
@@ -242,12 +241,32 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                     // _param.information = value;
                     _param = _param.copyWith(information: value);
                   },
+                  onTap: () async {
+                    final newInfo = await Navigator.of(context).push<String>(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return FullScreenTextField(
+                            title: 'Thông tin sản phẩm',
+                            initialText: _param.information,
+                          );
+                        },
+                      ),
+                    );
+
+                    log('newInfo: $newInfo');
+                    if (newInfo != null) {
+                      setState(() {
+                        _param = _param.copyWith(information: newInfo);
+                      });
+                    }
+                  },
                 ),
                 const SizedBox(height: 12.0),
 
                 //# product description
                 OutlineTextField(
                   label: 'Mô tả sản phẩm',
+                  readOnly: true,
                   maxLines: 4,
                   controller: TextEditingController(text: _param.description),
                   onChanged: (value) {
@@ -260,6 +279,25 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                     }
                     return null;
                   },
+                  onTap: () async {
+                    final newDesc = await Navigator.of(context).push<String>(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return FullScreenTextField(
+                            title: 'Mô tả sản phẩm',
+                            initialText: _param.description,
+                          );
+                        },
+                      ),
+                    );
+
+                    log('newDesc: $newDesc');
+                    if (newDesc != null) {
+                      setState(() {
+                        _param = _param.copyWith(description: newDesc);
+                      });
+                    }
+                  },
                 ),
                 const SizedBox(height: 12.0),
 
@@ -268,16 +306,26 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
                     isRequired: true,
                     suffixIcon: const Icon(Icons.edit),
                     onPressed: () async {
-                      final category = await showDialog<CategoryEntity>(
-                        context: context,
-                        builder: (context) => const CategoryPickerDialog(),
+                      final cate = await Navigator.of(context).push<CategoryWithNestedChildrenEntity>(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const CategoryPickerPage();
+                          },
+                        ),
                       );
 
-                      if (category != null) {
+                      log('$cate');
+
+                      // final category = await showDialog<CategoryEntity>(
+                      //   context: context,
+                      //   builder: (context) => const CategoryPickerDialog(),
+                      // );
+
+                      if (cate != null) {
                         setState(() {
                           // _param.categoryId = category.categoryId;
-                          _param = _param.copyWith(categoryId: category.categoryId);
-                          renderCategoryName = category.name;
+                          _param = _param.copyWith(categoryId: cate.parent.categoryId);
+                          renderCategoryName = cate.parent.name;
                         });
                       }
                     },

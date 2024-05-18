@@ -72,6 +72,15 @@ class _AppScaffoldState extends State<AppScaffold> {
             },
           ),
         ];
+      case 2:
+        return [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              _onItemTapped(0);
+            },
+          ),
+        ];
       default:
         return null;
     }

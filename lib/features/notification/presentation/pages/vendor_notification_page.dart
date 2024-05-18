@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/notification.dart';
 
+import '../../../../core/handler/vendor_handler.dart';
 import '../../../../service_locator.dart';
 import '../../domain/repository/vendor_notification_repository.dart';
 
 const int _notificationPerPage = 20;
+
 //! this page is a copy of notification_page.dart (flutter vtv)
 class VendorNotificationPage extends StatefulWidget {
   const VendorNotificationPage({super.key});
@@ -16,50 +20,61 @@ class VendorNotificationPage extends StatefulWidget {
 }
 
 class _VendorNotificationPageState extends State<VendorNotificationPage> {
-  late LazyLoadController<NotificationEntity> controller;
+  late LazyListController<NotificationEntity> _lazyListController;
 
   @override
   void initState() {
     super.initState();
-    controller = LazyLoadController<NotificationEntity>(
+    _lazyListController = LazyListController<NotificationEntity>.sliver(
+      paginatedData: (page) => sl<VendorNotificationRepository>().getPageNotifications(page, _notificationPerPage),
       items: [],
       scrollController: ScrollController(),
-      useGrid: false,
-      emptyMessage: 'Không có thông báo nào',
+      itemBuilder: (_, index, data) => notificationItem(data, index),
+      showLoadingIndicator: true,
+    )..init();
+  }
+
+  NotificationItem notificationItem(NotificationEntity data, int index) {
+    return NotificationItem(
+      notification: data,
+      onPressed: (notificationId) {
+        final uuid = ConversionUtils.extractUUID(data.body);
+        if (uuid != null) VendorHandler.navigateToOrderDetailPage(context, uuid);
+      },
+      onExpandPressed: (notificationId) async {
+        final resultEither = await sl<VendorNotificationRepository>().markAsRead(notificationId);
+
+        resultEither.fold(
+          (error) {
+            Fluttertoast.showToast(msg: '${error.message}');
+          },
+          (ok) {
+            log('${ok.message}');
+            _lazyListController.updateAt(index, data.copyWith(seen: true));
+          },
+        );
+      },
+      onConfirmDismiss: (notificationId) async {
+        final resultEither = await sl<VendorNotificationRepository>().deleteNotification(notificationId);
+
+        return resultEither.fold(
+          (error) {
+            return false;
+          },
+          (ok) {
+            log('${ok.message}');
+            _lazyListController.removeAt(index);
+            return true;
+          },
+        );
+      },
     );
   }
-  // static const String routeRoot = '/notification';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NotificationList(
-        dataCallback: (page) => sl<VendorNotificationRepository>().getPageNotifications(page, _notificationPerPage),
-        markAsRead: (id) async {
-          final resultEither = await sl<VendorNotificationRepository>().markAsRead(id);
-
-          resultEither.fold(
-            (error) {
-              Fluttertoast.showToast(msg: '${error.message}');
-            },
-            (ok) {
-              controller.reload(newItems: ok.data!.items);
-            },
-          );
-        },
-        deleteNotification: (id, index) async {
-          final resultEither = await sl<VendorNotificationRepository>().deleteNotification(id);
-
-          return resultEither.fold(
-            (error) {
-              return false;
-            },
-            (ok) {
-              controller.removeAt(index);
-              return true;
-            },
-          );
-        },
-      ),
+      body: NotificationList(lazyListController: _lazyListController),
     );
   }
 }

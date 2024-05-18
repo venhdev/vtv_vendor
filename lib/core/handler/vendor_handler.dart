@@ -44,20 +44,31 @@ class VendorHandler {
     });
   }
 
-  static void navigateToOrderDetailPage(BuildContext context, String orderId) {
+  static Future<void> navigateToOrderDetailPage(BuildContext context, String orderId) async {
+    showDialogToLoading(context);
+
     // fetch order detail
-    sl<OrderVendorRepository>().getOrderDetail(orderId).then((respEither) {
-      respEither.fold(
-        (error) => showDialogToAlert(context, title: Text(error.message ?? 'Lỗi khi lấy thông tin đơn hàng')),
-        (ok) => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => OrderDetailPage.vendor(
-              orderDetail: ok.data!,
-              onBack: () => Navigator.of(context).pop(),
-            ),
+    final OrderDetailEntity? orderDetail = await sl<OrderVendorRepository>().getOrderDetail(orderId).then((respEither) {
+      return respEither.fold(
+        (error) {
+          showDialogToAlert(context, title: Text(error.message ?? 'Lỗi khi lấy thông tin đơn hàng'));
+          return null;
+        },
+        (ok) => ok.data,
+      );
+    });
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+
+    if (orderDetail != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => OrderDetailPage.vendor(
+            orderDetail: orderDetail,
+            onBack: () => Navigator.of(context).pop(),
           ),
         ),
       );
-    });
+    }
   }
 }

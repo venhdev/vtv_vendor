@@ -293,6 +293,7 @@ class VendorProductItem extends StatelessWidget {
                     child: Text(product.status == Status.ACTIVE.name ? 'Ẩn' : 'Hiện'),
                   ),
                 ),
+                const SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: onEditPressed,
@@ -311,6 +312,7 @@ class VendorProductItem extends StatelessWidget {
               // dropdown menu
               if (product.status == Status.ACTIVE.name || product.status == Status.INACTIVE.name) ...[
                 PopupMenuButton<String>(
+                  padding: EdgeInsets.zero,
                   onSelected: (value) async {
                     switch (value) {
                       case 'delete':
