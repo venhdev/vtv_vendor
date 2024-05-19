@@ -1,10 +1,10 @@
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
-import '../../domain/repository/order_vendor_repository.dart';
+import '../../domain/repository/vendor_order_repository.dart';
 import '../data_sources/vendor_order_data_source.dart';
 
-class VendorOrderRepositoryImpl implements OrderVendorRepository {
+class VendorOrderRepositoryImpl implements VendorOrderRepository {
   final VendorOrderDataSource _dataSource;
 
   VendorOrderRepositoryImpl(this._dataSource);
@@ -20,7 +20,7 @@ class VendorOrderRepositoryImpl implements OrderVendorRepository {
   }
 
   @override
-  FRespData<OrderEntity> updateOrderStatus(String orderId, OrderStatus status) async {
+  FRespData<OrderDetailEntity> updateOrderStatus(String orderId, OrderStatus status) async {
     return handleDataResponseFromDataSource(dataCallback: () => _dataSource.updateOrderStatus(orderId, status));
   }
 

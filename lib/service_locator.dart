@@ -18,7 +18,7 @@ import 'features/notification/data/repository/vendor_notification_repository_imp
 import 'features/notification/domain/repository/vendor_notification_repository.dart';
 import 'features/order/data/data_sources/vendor_order_data_source.dart';
 import 'features/order/data/repository/vendor_order_repository_impl.dart';
-import 'features/order/domain/repository/order_vendor_repository.dart';
+import 'features/order/domain/repository/vendor_order_repository.dart';
 import 'features/auth/data/repository/profile_repository_impl.dart';
 import 'features/auth/domain/repository/profile_repository.dart';
 import 'features/product/data/data_sources/vendor_product_data_source.dart';
@@ -88,7 +88,7 @@ Future<void> initializeLocator() async {
   sl.registerSingleton<VendorNotificationRepository>(VendorNotificationRepositoryImpl(sl()));
 
   sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl()));
-  sl.registerSingleton<OrderVendorRepository>(VendorOrderRepositoryImpl(sl()));
+  sl.registerSingleton<VendorOrderRepository>(VendorOrderRepositoryImpl(sl()));
 
   //! UseCase
   sl.registerLazySingleton<LoginWithUsernameAndPasswordUC>(() => LoginWithUsernameAndPasswordUC(sl()));

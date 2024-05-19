@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vendor/features/order/domain/repository/order_vendor_repository.dart';
+import 'package:vendor/features/order/domain/repository/vendor_order_repository.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
@@ -31,9 +31,9 @@ class VendorOrderPurchasePage extends StatefulWidget {
 class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
   FRespData<MultiOrderEntity> _dataCallback(OrderStatus? status) async {
     if (status == null) {
-      return sl<OrderVendorRepository>().getOrderList();
+      return sl<VendorOrderRepository>().getOrderList();
     } else {
-      return sl<OrderVendorRepository>().getOrderListByStatus(status);
+      return sl<VendorOrderRepository>().getOrderListByStatus(status);
     }
   }
 
@@ -43,10 +43,10 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
       appBarTitle: 'Đơn hàng',
       dataCallback: _dataCallback,
       initialMultiOrders: widget.initialMultiOrders,
-      vendorItemBuilder: (order, reloadCallback) => OrderPurchaseItem(
+      vendorItemBuilder: (order, onRefresh) => OrderPurchaseItem(
         order: order,
-        onPressed: () => VendorHandler.navigateToOrderDetailPage(context, order.orderId!),
-        actionBuilder: (status) => buildVendorAction(status, order, reloadCallback, context),
+        onPressed: () => VendorHandler.navigateToOrderDetailPage(context, orderId: order.orderId!),
+        actionBuilder: (status) => buildVendorAction(status, order, onRefresh, context),
       ),
       pageController: OrderPurchasePageController(
         tapPages: vendorTapPages,
@@ -55,7 +55,7 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
     );
   }
 
-  Widget buildVendorAction(OrderStatus status, OrderEntity order, VoidCallback reloadCallback, BuildContext context) {
+  Widget buildVendorAction(OrderStatus status, OrderEntity order, VoidCallback onRefresh, BuildContext context) {
     switch (status) {
       case OrderStatus.PENDING:
         return OrderPurchaseItemAction(
@@ -65,30 +65,33 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
             context,
             order.orderId!,
             OrderStatus.PROCESSING,
-            reloadCallback,
+            onRefresh,
           ),
           backgroundColor: Colors.blue.shade100,
           buttonColor: Colors.blue.shade200,
         );
-
       case OrderStatus.PROCESSING:
         return OrderPurchaseItemAction(
           label: 'Đơn hàng đã đóng gói xong?',
-          buttonLabel: 'Đã đóng gói',
-          onPressed: () =>
-              VendorHandler.updateOrderStatus(context, order.orderId!, OrderStatus.PICKUP_PENDING, reloadCallback),
+          buttonLabel: 'Đóng gói xong',
+          onPressed: () => VendorHandler.updateOrderStatus(
+            context,
+            order.orderId!,
+            OrderStatus.PICKUP_PENDING,
+            onRefresh,
+          ),
           backgroundColor: Colors.orange.shade100,
           buttonColor: Colors.orange.shade400,
         );
       case OrderStatus.WAITING:
         return OrderPurchaseItemAction(
           label: 'Đơn hàng đã bị hủy?',
-          buttonLabel: 'Xác nhận',
+          buttonLabel: 'Xác nhận hủy',
           onPressed: () => VendorHandler.updateOrderStatus(
             context,
             order.orderId!,
             OrderStatus.CANCEL,
-            reloadCallback,
+            onRefresh,
           ),
           backgroundColor: Colors.red.shade100,
           buttonColor: Colors.red.shade400,

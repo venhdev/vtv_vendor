@@ -3,13 +3,13 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
 import '../../../../service_locator.dart';
-import '../../../order/domain/repository/order_vendor_repository.dart';
+import '../../../order/domain/repository/vendor_order_repository.dart';
 import '../../../order/presentation/pages/vendor_order_purchase_page.dart';
 
 Future<List<RespData<MultiOrderEntity>>> _futureDataOrders() async {
   return Future.wait(
     List.generate(vendorTapPages.length, (index) async {
-      return sl<OrderVendorRepository>().getOrderListByStatus(vendorTapPages[index]);
+      return sl<VendorOrderRepository>().getOrderListByStatus(vendorTapPages[index]);
     }),
   );
 }

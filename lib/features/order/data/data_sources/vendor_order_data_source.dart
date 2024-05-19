@@ -7,7 +7,7 @@ import '../../../../core/constants/vendor_api.dart';
 abstract class VendorOrderDataSource {
   //# order-shop-controller
   Future<SuccessResponse<MultiOrderEntity>> getOrderList();
-  Future<SuccessResponse<OrderEntity>> updateOrderStatus(String orderId, OrderStatus status);
+  Future<SuccessResponse<OrderDetailEntity>> updateOrderStatus(String orderId, OrderStatus status);
   Future<SuccessResponse<OrderDetailEntity>> getOrderDetail(String orderId);
   Future<SuccessResponse<MultiOrderEntity>> getOrderListByStatus(OrderStatus status);
 
@@ -45,7 +45,7 @@ class OrderVendorDataSourceImpl implements VendorOrderDataSource {
   }
 
   @override
-  Future<SuccessResponse<OrderEntity>> updateOrderStatus(String orderId, OrderStatus status) async {
+  Future<SuccessResponse<OrderDetailEntity>> updateOrderStatus(String orderId, OrderStatus status) async {
     final url = baseUri(path: kAPIVendorOrderUpdateStatusURL, pathVariables: {
       'orderId': orderId,
       'status': status.name,
@@ -53,10 +53,10 @@ class OrderVendorDataSourceImpl implements VendorOrderDataSource {
 
     final response = await _dio.patchUri(url);
 
-    return handleDioResponse<OrderEntity, Map<String, dynamic>>(
+    return handleDioResponse<OrderDetailEntity, Map<String, dynamic>>(
       response,
       url,
-      parse: (jsonMap) => OrderEntity.fromMap(jsonMap['orderDTO']),
+      parse: (jsonMap) => OrderDetailEntity.fromMap(jsonMap),
     );
   }
   

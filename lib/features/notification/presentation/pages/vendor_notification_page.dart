@@ -35,25 +35,29 @@ class _VendorNotificationPageState extends State<VendorNotificationPage> {
   }
 
   NotificationItem notificationItem(NotificationEntity data, int index) {
+    void handleRead() async {
+      if (data.seen) return; // Already read
+      final resultEither = await sl<VendorNotificationRepository>().markAsRead(data.notificationId);
+
+      resultEither.fold(
+        (error) {
+          Fluttertoast.showToast(msg: '${error.message}');
+        },
+        (ok) {
+          log('${ok.message}');
+          _lazyListController.updateAt(index, data.copyWith(seen: true));
+        },
+      );
+    }
+
     return NotificationItem(
       notification: data,
       onPressed: (notificationId) {
+        handleRead();
         final uuid = ConversionUtils.extractUUID(data.body);
-        if (uuid != null) VendorHandler.navigateToOrderDetailPage(context, uuid);
+        if (uuid != null) VendorHandler.navigateToOrderDetailPage(context, orderId: uuid);
       },
-      onExpandPressed: (notificationId) async {
-        final resultEither = await sl<VendorNotificationRepository>().markAsRead(notificationId);
-
-        resultEither.fold(
-          (error) {
-            Fluttertoast.showToast(msg: '${error.message}');
-          },
-          (ok) {
-            log('${ok.message}');
-            _lazyListController.updateAt(index, data.copyWith(seen: true));
-          },
-        );
-      },
+      onExpandPressed: handleRead,
       onConfirmDismiss: (notificationId) async {
         final resultEither = await sl<VendorNotificationRepository>().deleteNotification(notificationId);
 

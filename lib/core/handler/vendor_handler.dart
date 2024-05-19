@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vendor/features/order/domain/repository/order_vendor_repository.dart';
+import 'package:vendor/features/order/domain/repository/vendor_order_repository.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
+import '../../features/order/presentation/pages/vendor_order_detail_page.dart';
 import '../../service_locator.dart';
 
 class VendorHandler {
@@ -36,7 +37,7 @@ class VendorHandler {
 
     if (!isConfirm) return;
 
-    sl<OrderVendorRepository>().updateOrderStatus(orderId, statusAfterUpdate).then((respEither) {
+    sl<VendorOrderRepository>().updateOrderStatus(orderId, statusAfterUpdate).then((respEither) {
       respEither.fold((error) => showDialogToAlert(context, title: Text(error.message ?? 'Lỗi khi chấp nhận đơn hàng')),
           (ok) {
         reloadCallback();
@@ -44,31 +45,37 @@ class VendorHandler {
     });
   }
 
-  static Future<void> navigateToOrderDetailPage(BuildContext context, String orderId) async {
-    showDialogToLoading(context);
+  static Future<OrderDetailEntity?> navigateToOrderDetailPage(
+    BuildContext context, {
+    String? orderId,
+    OrderDetailEntity? orderDetail,
+  }) async {
+    assert((orderDetail != null && orderId == null) || (orderDetail == null && orderId != null));
 
-    // fetch order detail
-    final OrderDetailEntity? orderDetail = await sl<OrderVendorRepository>().getOrderDetail(orderId).then((respEither) {
-      return respEither.fold(
-        (error) {
-          showDialogToAlert(context, title: Text(error.message ?? 'Lỗi khi lấy thông tin đơn hàng'));
-          return null;
-        },
+    if (orderId != null) {
+      final respEither = await showDialogToPerform(
+        context,
+        dataCallback: () => sl<VendorOrderRepository>().getOrderDetail(orderId),
+        closeBy: (context, result) => Navigator.of(context).pop(result),
+      );
+      if (!context.mounted || respEither == null) return null;
+
+      final OrderDetailEntity? navigationOrder = respEither.fold(
+        (error) => null, // Fluttertoast.showToast(msg: error.message ?? 'Có lỗi xảy ra')
         (ok) => ok.data,
       );
-    });
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
+      if (navigationOrder == null) return null; //! when load order detail failed >> no navigation
 
-    if (orderDetail != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => OrderDetailPage.vendor(
-            orderDetail: orderDetail,
-            onBack: () => Navigator.of(context).pop(),
-          ),
-        ),
+      return await Navigator.of(context).push<OrderDetailEntity>(
+        MaterialPageRoute(builder: (context) => VendorOrderDetailPage(orderDetail: navigationOrder)),
       );
+    } else if (orderDetail != null) {
+      // no loading
+      return await Navigator.of(context).push<OrderDetailEntity>(
+        MaterialPageRoute(builder: (context) => VendorOrderDetailPage(orderDetail: orderDetail)),
+      );
+    } else {
+      return null;
     }
   }
 }
