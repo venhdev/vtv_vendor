@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:vendor/features/product/domain/entities/dto/add_update_shop_category_request.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
 import 'package:vtv_common/home.dart';
@@ -140,5 +141,17 @@ class VendorProductRepositoryImpl implements VendorProductRepository {
   FRespData<ShopCategoryEntity> removeProductsFromCategoryShop(int categoryShopId, List<int> productIds) async {
     return await handleDataResponseFromDataSource(
         dataCallback: () => _shopCategoryDataSource.removeProductsFromCategoryShop(categoryShopId, productIds));
+  }
+
+  @override
+  FRespData<ShopCategoryEntity> addShopCategory(AddUpdateShopCategoryRequest addParam) async {
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _shopCategoryDataSource.addShopCategory(addParam));
+  }
+
+  @override
+  FRespData<ShopCategoryEntity> updateShopCategory(int categoryShopId, AddUpdateShopCategoryRequest updateParam) async {
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _shopCategoryDataSource.updateShopCategory(categoryShopId, updateParam));
   }
 }

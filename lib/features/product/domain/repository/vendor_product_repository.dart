@@ -5,6 +5,7 @@ import 'package:vtv_common/shop.dart';
 import '../entities/add_product_resp.dart';
 import '../entities/dto/add_update_product_param.dart';
 import '../entities/category_with_nested_children_entity.dart';
+import '../entities/dto/add_update_shop_category_request.dart';
 
 abstract class VendorProductRepository {
 //   POST
@@ -36,4 +37,6 @@ abstract class VendorProductRepository {
   FRespData<List<ShopCategoryEntity>> getAllShopCategories();
   FRespData<ShopCategoryEntity> addProductsToCategoryShop(int categoryShopId, List<int> productIds);
   FRespData<ShopCategoryEntity> removeProductsFromCategoryShop(int categoryShopId, List<int> productIds);
+  FRespData<ShopCategoryEntity> addShopCategory(AddUpdateShopCategoryRequest addParam);
+  FRespData<ShopCategoryEntity> updateShopCategory(int categoryShopId, AddUpdateShopCategoryRequest updateParam);
 }

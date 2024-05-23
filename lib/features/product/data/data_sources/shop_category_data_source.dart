@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:vendor/features/product/domain/entities/dto/add_update_shop_category_request.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/shop.dart';
 
@@ -11,6 +12,10 @@ abstract class VendorShopCategoryDataSource {
   Future<SuccessResponse<List<ShopCategoryEntity>>> getAllShopCategories();
   Future<SuccessResponse<ShopCategoryEntity>> addProductsToCategoryShop(int categoryShopId, List<int> productIds);
   Future<SuccessResponse<ShopCategoryEntity>> removeProductsFromCategoryShop(int categoryShopId, List<int> productIds);
+
+  Future<SuccessResponse<ShopCategoryEntity>> addShopCategory(AddUpdateShopCategoryRequest addParam);
+  Future<SuccessResponse<ShopCategoryEntity>> updateShopCategory(
+      int categoryShopId, AddUpdateShopCategoryRequest updateParam);
 }
 
 class VendorShopCategoryDataSourceImpl implements VendorShopCategoryDataSource {
@@ -57,6 +62,52 @@ class VendorShopCategoryDataSourceImpl implements VendorShopCategoryDataSource {
     );
 
     final response = await _dio.deleteUri(url, data: json.encode(productIds));
+
+    return handleDioResponse<ShopCategoryEntity, Map<String, dynamic>>(
+      response,
+      url,
+      parse: (jsonMap) => ShopCategoryEntity.fromMap(jsonMap['categoryShopDTO']),
+    );
+  }
+
+  @override
+  Future<SuccessResponse<ShopCategoryEntity>> addShopCategory(AddUpdateShopCategoryRequest addParam) async {
+    final url = uriBuilder(path: kAPICategoryShopAddURL);
+
+    final formData = FormData.fromMap(await addParam.toMultiPartFileMap());
+
+    final response = await _dio.postUri(
+      url,
+      data: formData,
+      options: Options(
+        headers: {'Content-Type': 'multipart/form-data'},
+      ),
+    );
+
+    return handleDioResponse<ShopCategoryEntity, Map<String, dynamic>>(
+      response,
+      url,
+      parse: (jsonMap) => ShopCategoryEntity.fromMap(jsonMap['categoryShopDTO']),
+    );
+  }
+
+  @override
+  Future<SuccessResponse<ShopCategoryEntity>> updateShopCategory(
+      int categoryShopId, AddUpdateShopCategoryRequest updateParam) async {
+    final url = uriBuilder(
+      path: kAPICategoryShopUpdateURL,
+      pathVariables: {'categoryShopId': categoryShopId.toString()},
+    );
+
+    final formData = FormData.fromMap(await updateParam.toMultiPartFileMap());
+
+    final response = await _dio.putUri(
+      url,
+      data: formData,
+      options: Options(
+        headers: {'Content-Type': 'multipart/form-data'},
+      ),
+    );
 
     return handleDioResponse<ShopCategoryEntity, Map<String, dynamic>>(
       response,
