@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vtv_common/core.dart';
 
-import '../../domain/entities/dto/product_variant_request.dart';
-import '../components/form_add_update_variant.dart';
+import '../../../domain/entities/dto/product_variant_request.dart';
+import '../../components/form_add_update_variant.dart';
 
 //! page view to add multiple variant (for each tap it will allow vendor to add/update variant)
 class AddUpdateMultiVariantPage extends StatefulWidget {

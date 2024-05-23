@@ -3,16 +3,16 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vendor/features/product/domain/entities/dto/add_update_product_param.dart';
-import 'package:vendor/features/product/presentation/pages/add_update_variants_page.dart';
+import 'package:vendor/features/product/presentation/pages/manage_product/add_update_variants_page.dart';
 import 'package:vtv_common/core.dart';
 
-import '../../../../service_locator.dart';
-import '../../domain/entities/category_with_nested_children_entity.dart';
-import '../../domain/entities/dto/product_variant_request.dart';
-import '../../domain/repository/vendor_product_repository.dart';
-import '../components/add_update_attribute_dialog.dart';
-import '../components/add_update_product_field.dart';
-import '../components/attribute_controller.dart';
+import '../../../../../service_locator.dart';
+import '../../../domain/entities/category_with_nested_children_entity.dart';
+import '../../../domain/entities/dto/product_variant_request.dart';
+import '../../../domain/repository/vendor_product_repository.dart';
+import '../../components/add_update_attribute_dialog.dart';
+import '../../components/add_update_product_field.dart';
+import '../../components/attribute_controller.dart';
 import 'category_picker_page.dart';
 
 final _emptyVariant = ProductVariantRequest(
@@ -46,7 +46,7 @@ class _AddUpdateProductPageState extends State<AddUpdateProductPage> {
 
   // render
   String renderCategoryName = '';
-  String _renderBrandName = '';
+  String _renderBrandName = ''; //TODO implement brand
   // int _numberOfVariants = 1;
 
   // UX

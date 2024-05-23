@@ -1,12 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:vtv_common/home.dart';
 
 class AddProductResp {
-  final String status;
-  final String message;
-  final int code;
   final int categoryId;
   final String categoryName;
   final int? categoryParentId;
@@ -18,9 +14,6 @@ class AddProductResp {
   final ProductEntity product;
 
   AddProductResp({
-    required this.status,
-    required this.message,
-    required this.code,
     required this.categoryId,
     required this.categoryName,
     required this.categoryParentId,
@@ -44,12 +37,9 @@ class AddProductResp {
     String? shopName,
     String? shopAvatar,
     int? countOrder,
-    ProductEntity? productDto,
+    ProductEntity? product,
   }) {
     return AddProductResp(
-      status: status ?? this.status,
-      message: message ?? this.message,
-      code: code ?? this.code,
       categoryId: categoryId ?? this.categoryId,
       categoryName: categoryName ?? this.categoryName,
       categoryParentId: categoryParentId ?? this.categoryParentId,
@@ -58,15 +48,12 @@ class AddProductResp {
       shopName: shopName ?? this.shopName,
       shopAvatar: shopAvatar ?? this.shopAvatar,
       countOrder: countOrder ?? this.countOrder,
-      product: productDto ?? this.product,
+      product: product ?? this.product,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'status': status,
-      'message': message,
-      'code': code,
       'categoryId': categoryId,
       'categoryName': categoryName,
       'categoryParentId': categoryParentId,
@@ -81,9 +68,6 @@ class AddProductResp {
 
   factory AddProductResp.fromMap(Map<String, dynamic> map) {
     return AddProductResp(
-      status: map['status'] as String,
-      message: map['message'] as String,
-      code: map['code'] as int,
       categoryId: map['categoryId'] as int,
       categoryName: map['categoryName'] as String,
       categoryParentId: map['categoryParentId'] as int?,
@@ -102,17 +86,14 @@ class AddProductResp {
 
   @override
   String toString() {
-    return 'ProductAddResp(status: $status, message: $message, code: $code, categoryId: $categoryId, categoryName: $categoryName, categoryParentId: $categoryParentId, categoryParentName: $categoryParentName, shopId: $shopId, shopName: $shopName, shopAvatar: $shopAvatar, countOrder: $countOrder, productDto: $product)';
+    return 'ProductAddResp(categoryId: $categoryId, categoryName: $categoryName, categoryParentId: $categoryParentId, categoryParentName: $categoryParentName, shopId: $shopId, shopName: $shopName, shopAvatar: $shopAvatar, countOrder: $countOrder, productDto: $product)';
   }
 
   @override
   bool operator ==(covariant AddProductResp other) {
     if (identical(this, other)) return true;
 
-    return other.status == status &&
-        other.message == message &&
-        other.code == code &&
-        other.categoryId == categoryId &&
+    return other.categoryId == categoryId &&
         other.categoryName == categoryName &&
         other.categoryParentId == categoryParentId &&
         other.categoryParentName == categoryParentName &&
@@ -125,10 +106,7 @@ class AddProductResp {
 
   @override
   int get hashCode {
-    return status.hashCode ^
-        message.hashCode ^
-        code.hashCode ^
-        categoryId.hashCode ^
+    return categoryId.hashCode ^
         categoryName.hashCode ^
         categoryParentId.hashCode ^
         categoryParentName.hashCode ^

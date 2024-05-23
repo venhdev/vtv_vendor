@@ -8,7 +8,7 @@ import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/dev.dart';
 
-import 'vendor_app.dart';
+import 'vendor_app_scaffold.dart';
 
 void main() async {
   // WidgetsBinding widgetsBinding =

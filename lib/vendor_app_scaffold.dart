@@ -10,7 +10,7 @@ import 'features/voucher/presentation/pages/vendor_voucher_manage_page.dart';
 import 'vendor_drawer.dart';
 import 'features/auth/presentation/pages/no_permission_page.dart';
 import 'features/auth/presentation/pages/vendor_login_page.dart';
-import 'features/product/presentation/pages/vendor_home_page.dart';
+import 'vendor_home_page.dart';
 
 class VendorApp extends StatelessWidget {
   const VendorApp({super.key});

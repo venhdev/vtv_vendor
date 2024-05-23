@@ -5,18 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "vtv_vendor",
+            "name": "debug",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "flutterMode": "debug",
         },
         {
-            "name": "vtv_vendor (profile mode)",
+            "name": "profile",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "vtv_vendor (release mode)",
+            "name": "release",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

@@ -1,5 +1,6 @@
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/home.dart';
+import 'package:vtv_common/shop.dart';
 
 import '../entities/add_product_resp.dart';
 import '../entities/dto/add_update_product_param.dart';
@@ -24,8 +25,15 @@ abstract class VendorProductRepository {
 
 // GET
 // /api/vendor/product/page/status/{status}
-  FRespData<ProductPageResp> getProductByStatus(int page, int size, Status status);
+
+  /// return list product (page) by status according to current logged vendor
+  FRespData<ProductPageResp> getProductPageByStatus(int page, int size, Status status);
 
   //! category (custom)
   FRespData<List<CategoryWithNestedChildrenEntity>> getCategoryWithNestedChildren();
+
+  //# category-shop-controller
+  FRespData<List<ShopCategoryEntity>> getAllShopCategories();
+  FRespData<ShopCategoryEntity> addProductsToCategoryShop(int categoryShopId, List<int> productIds);
+  FRespData<ShopCategoryEntity> removeProductsFromCategoryShop(int categoryShopId, List<int> productIds);
 }

@@ -22,6 +22,7 @@ import 'features/order/domain/repository/vendor_order_repository.dart';
 import 'features/auth/data/repository/profile_repository_impl.dart';
 import 'features/auth/domain/repository/profile_repository.dart';
 import 'features/product/data/data_sources/vendor_product_data_source.dart';
+import 'features/product/data/data_sources/shop_category_data_source.dart';
 import 'features/product/data/repository/vendor_product_repository_impl.dart';
 import 'features/product/domain/repository/vendor_product_repository.dart';
 import 'features/wallet/data/data_sources/wallet_data_source.dart';
@@ -69,6 +70,7 @@ Future<void> initializeLocator() async {
   sl.registerSingleton<FirebaseCloudMessagingManager>(FirebaseCloudMessagingManager(fMessaging));
 
   //! Data source
+  sl.registerSingleton<VendorShopCategoryDataSource>(VendorShopCategoryDataSourceImpl(sl()));
   sl.registerSingleton<GuestDataSource>(GuestDataSourceImpl(sl()));
   sl.registerSingleton<VendorNotificationDataSource>(VendorNotificationDataSourceImpl(sl()));
   sl.registerSingleton<VendorProductDataSource>(VendorProductDataSourceImpl(sl()));
@@ -83,7 +85,7 @@ Future<void> initializeLocator() async {
   sl.registerSingleton<GuestRepository>(GuestRepositoryImpl(sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
   sl.registerSingleton<VendorRepository>(VendorRepositoryImpl(sl()));
-  sl.registerSingleton<VendorProductRepository>(VendorProductRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<VendorProductRepository>(VendorProductRepositoryImpl(sl(), sl(), sl()));
   sl.registerSingleton<VoucherRepository>(VoucherRepositoryImpl(sl()));
   sl.registerSingleton<VendorNotificationRepository>(VendorNotificationRepositoryImpl(sl()));
 

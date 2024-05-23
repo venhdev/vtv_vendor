@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vtv_common/core.dart';
 
-import '../../../../service_locator.dart';
-import '../../../auth/domain/repository/profile_repository.dart';
-import '../../../auth/presentation/components/shop_info_detail_view.dart';
-import '../components/menu_item.dart';
-import '../components/order_purchase_tracking.dart';
-import 'add_update_product_page.dart';
-import 'vendor_product_page.dart';
+import 'service_locator.dart';
+import 'features/auth/domain/repository/profile_repository.dart';
+import 'features/auth/presentation/components/shop_info_detail_view.dart';
+import 'features/product/presentation/components/menu_item.dart';
+import 'features/product/presentation/components/order_purchase_tracking.dart';
+import 'features/product/presentation/pages/manage_product/add_update_product_page.dart';
+import 'features/product/presentation/pages/manage_category/shop_category_manage_page.dart';
+import 'features/product/presentation/pages/manage_product/vendor_product_page.dart';
 
 class VendorHomePage extends StatefulWidget {
   const VendorHomePage({super.key, required this.onItemTapped});
@@ -76,6 +77,15 @@ class _VendorHomePageState extends State<VendorHomePage> {
                   );
                 }),
                 MenuItem('Quản lý Voucher', Icons.card_giftcard, onPressed: () => widget.onItemTapped(2)),
+                MenuItem('Quản lý Danh mục', Icons.card_giftcard, onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const ShopCategoryManagePage();
+                      },
+                    ),
+                  );
+                }),
               ],
             ),
           ),

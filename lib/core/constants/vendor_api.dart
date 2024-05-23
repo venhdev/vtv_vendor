@@ -61,3 +61,29 @@ const String kAPIWalletGetURL = '/customer/wallet/get'; //this use for both vend
 const String kAPINotificationGetPageURL = '/customer/notification/get-page'; // GET
 const String kAPINotificationReadURL = '/customer/notification/read'; // PUT /{notificationId}
 const String kAPINotificationDeleteURL = '/customer/notification/delete'; // DELETE /{notificationId}
+
+//# category-shop-controller
+// PUT
+// /api/vendor/category-shop/update/{categoryShopId} //! web handle this
+// const String kAPICategoryShopUpdateURL = '/vendor/category-shop/update/:categoryShopId'; // {categoryShopId}
+
+// PUT
+// /api/vendor/category-shop/id/{categoryShopId}/add-product
+const String kAPICategoryShopAddProductURL = '/vendor/category-shop/id/:categoryShopId/add-product'; // {categoryShopId}
+
+// POST
+// /api/vendor/category-shop/add //! web handle this
+// const String kAPICategoryShopAddURL = '/vendor/category-shop/add';
+
+// GET
+// /api/vendor/category-shop/get-all
+const String kAPICategoryShopGetAllURL = '/vendor/category-shop/get-all';
+
+// DELETE
+// /api/vendor/category-shop/id/{categoryShopId}/delete-product
+const String kAPICategoryShopDeleteProductURL =
+    '/vendor/category-shop/id/:categoryShopId/delete-product'; // {categoryShopId}
+
+// DELETE
+// /api/vendor/category-shop/delete/{categoryShopId} //! web handle this
+// const String kAPICategoryShopDeleteURL = '/vendor/category-shop/delete/:categoryShopId'; // {categoryShopId}

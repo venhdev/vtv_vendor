@@ -1,22 +1,25 @@
 import 'package:dartz/dartz.dart';
-import 'package:vendor/features/product/domain/entities/category_with_nested_children_entity.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
 import 'package:vtv_common/home.dart';
+import 'package:vtv_common/shop.dart';
 
 import '../../domain/entities/add_product_resp.dart';
+import '../../domain/entities/category_with_nested_children_entity.dart';
 import '../../domain/entities/dto/add_update_product_param.dart';
 import '../../domain/repository/vendor_product_repository.dart';
 import '../data_sources/vendor_product_data_source.dart';
+import '../data_sources/shop_category_data_source.dart';
 
 class VendorProductRepositoryImpl implements VendorProductRepository {
-  VendorProductRepositoryImpl(this._dataSource, this._guestDataSource);
+  VendorProductRepositoryImpl(this._dataSource, this._guestDataSource, this._shopCategoryDataSource);
   final VendorProductDataSource _dataSource;
   final GuestDataSource _guestDataSource;
+  final VendorShopCategoryDataSource _shopCategoryDataSource;
 
   @override
   FRespData<AddProductResp> addProduct(AddUpdateProductParam addParam) async {
-    return handleDataResponseFromDataSource(dataCallback: () => _dataSource.addProduct(addParam));
+    return await handleDataResponseFromDataSource(dataCallback: () => _dataSource.addProduct(addParam));
   }
 
   @override
@@ -100,22 +103,42 @@ class VendorProductRepositoryImpl implements VendorProductRepository {
   }
 
   @override
-  FRespData<ProductPageResp> getProductByStatus(int page, int size, Status status) async {
-    return handleDataResponseFromDataSource(dataCallback: () => _dataSource.getProductByStatus(page, size, status));
+  FRespData<ProductPageResp> getProductPageByStatus(int page, int size, Status status) async {
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _dataSource.getProductByStatus(page, size, status));
   }
 
   @override
   FRespEither restoreProduct(String productId) async {
-    return handleDataResponseFromDataSource(dataCallback: () => _dataSource.restoreProduct(productId));
+    return await handleDataResponseFromDataSource(dataCallback: () => _dataSource.restoreProduct(productId));
   }
 
   @override
   FRespEither updateProductStatus(String productId, Status status) async {
-    return handleDataResponseFromDataSource(dataCallback: () => _dataSource.updateProductStatus(productId, status));
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _dataSource.updateProductStatus(productId, status));
   }
 
   @override
   FRespData<ProductEntity> updateProduct(int productId, AddUpdateProductParam updateParam) async {
-    return handleDataResponseFromDataSource(dataCallback: () => _dataSource.updateProduct(productId, updateParam));
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _dataSource.updateProduct(productId, updateParam));
+  }
+
+  @override
+  FRespData<ShopCategoryEntity> addProductsToCategoryShop(int categoryShopId, List<int> productIds) async {
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _shopCategoryDataSource.addProductsToCategoryShop(categoryShopId, productIds));
+  }
+
+  @override
+  FRespData<List<ShopCategoryEntity>> getAllShopCategories() async {
+    return await handleDataResponseFromDataSource(dataCallback: () => _shopCategoryDataSource.getAllShopCategories());
+  }
+
+  @override
+  FRespData<ShopCategoryEntity> removeProductsFromCategoryShop(int categoryShopId, List<int> productIds) async {
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _shopCategoryDataSource.removeProductsFromCategoryShop(categoryShopId, productIds));
   }
 }

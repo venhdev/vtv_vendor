@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/home.dart';
 
-import '../../../../service_locator.dart';
-import '../../domain/entities/dto/add_update_product_param.dart';
-import '../../domain/repository/vendor_product_repository.dart';
+import '../../../../../service_locator.dart';
+import '../../../domain/entities/dto/add_update_product_param.dart';
+import '../../../domain/repository/vendor_product_repository.dart';
 import 'add_update_product_page.dart';
 
 const List<Status> _tabPage = [
@@ -36,13 +36,13 @@ String vendorProductStatusName(Status method) {
 FRespData<ProductPageResp> paginatedDataByStatus(Status status, int page, int size) async {
   switch (status) {
     case Status.ACTIVE:
-      return await sl<VendorProductRepository>().getProductByStatus(page, size, Status.ACTIVE);
+      return await sl<VendorProductRepository>().getProductPageByStatus(page, size, Status.ACTIVE);
     case Status.INACTIVE:
-      return await sl<VendorProductRepository>().getProductByStatus(page, size, Status.INACTIVE);
+      return await sl<VendorProductRepository>().getProductPageByStatus(page, size, Status.INACTIVE);
     case Status.DELETED:
-      return await sl<VendorProductRepository>().getProductByStatus(page, size, Status.DELETED);
+      return await sl<VendorProductRepository>().getProductPageByStatus(page, size, Status.DELETED);
     case Status.LOCKED:
-      return await sl<VendorProductRepository>().getProductByStatus(page, size, Status.LOCKED);
+      return await sl<VendorProductRepository>().getProductPageByStatus(page, size, Status.LOCKED);
     default:
       throw Exception('Invalid status');
   }
