@@ -19,7 +19,7 @@ class VendorNotificationDataSourceImpl implements VendorNotificationDataSource {
 
   @override
   Future<SuccessResponse<NotificationPageResp>> getPageNotifications(int page, int size) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPINotificationGetPageURL,
       queryParameters: {
         'page': page.toString(),
@@ -40,7 +40,7 @@ class VendorNotificationDataSourceImpl implements VendorNotificationDataSource {
 
   @override
   Future<SuccessResponse<NotificationPageResp>> markAsRead(String id) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: '$kAPINotificationReadURL/$id',
     );
 
@@ -57,7 +57,7 @@ class VendorNotificationDataSourceImpl implements VendorNotificationDataSource {
 
   @override
   Future<SuccessResponse<NotificationPageResp>> deleteNotification(String id) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: '$kAPINotificationDeleteURL/$id',
     );
 

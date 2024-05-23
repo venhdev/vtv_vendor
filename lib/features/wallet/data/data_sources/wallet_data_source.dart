@@ -4,21 +4,21 @@ import 'package:vtv_common/wallet.dart';
 
 import '../../../../core/constants/vendor_api.dart';
 
-abstract class VendorDataSource {
+abstract class WalletDataSource {
   //#wallet-controller
   // GET
   // /api/customer/wallet/get
   Future<SuccessResponse<WalletEntity>> getWallet();
 }
 
-class VendorDataSourceImpl implements VendorDataSource {
+class WalletDataSourceImpl implements WalletDataSource {
   final Dio _dio;
 
-  VendorDataSourceImpl(this._dio);
+  WalletDataSourceImpl(this._dio);
 
   @override
   Future<SuccessResponse<WalletEntity>> getWallet() async {
-    final url = baseUri(path: kAPIWalletGetURL);
+    final url = uriBuilder(path: kAPIWalletGetURL);
 
     final response = await _dio.getUri(url);
 

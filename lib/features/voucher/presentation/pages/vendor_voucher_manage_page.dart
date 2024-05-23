@@ -1,10 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vtv_common/core.dart';
+import 'package:vtv_common/order.dart';
 
 import '../../../../service_locator.dart';
 import '../../domain/repository/voucher_repository.dart';
 import '../components/vendor_voucher_item.dart';
+
+List<String> _filterList = [
+  'Trạng thái',
+  'Loại voucher',
+];
+
+List<Status> _statusList = [
+  Status.ACTIVE,
+  Status.DELETED,
+];
+
+List<VoucherTypes> _voucherTypeList = [
+  VoucherTypes.MONEY_SHOP,
+  VoucherTypes.PERCENTAGE_SHOP,
+];
+
+String _typeName(VoucherTypes type) {
+  switch (type) {
+    case VoucherTypes.MONEY_SHOP:
+      return 'Giảm theo tiền';
+    case VoucherTypes.PERCENTAGE_SHOP:
+      return 'Giảm theo phần trăm';
+    default:
+      return 'Unknown type';
+  }
+}
+
+String _statusName(Status status) {
+  switch (status) {
+    case Status.ACTIVE:
+      return 'Đang hoạt động';
+    case Status.DELETED:
+      return 'Đã xóa';
+    default:
+      return 'Unknown status';
+  }
+}
 
 class VendorVoucherManagePage extends StatefulWidget {
   const VendorVoucherManagePage({super.key});
@@ -14,10 +52,91 @@ class VendorVoucherManagePage extends StatefulWidget {
 }
 
 class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
+  bool filterByStatus = true;
+
+  late Status _selectedStatus;
+  late VoucherTypes _selectedType;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedStatus = Status.ACTIVE;
+    _selectedType = VoucherTypes.MONEY_SHOP;
+  }
+
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        //# type selection
+        // dropdown choose type
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              const Text('Lọc voucher: '),
+              const Spacer(),
+              DropdownButton<bool>(
+                value: filterByStatus,
+                items: _filterList
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e == _filterList[0],
+                        child: Text(e),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    filterByStatus = value!;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+
+        Wrap(
+            spacing: 8,
+            children: filterByStatus
+                ? _statusList
+                    .map(
+                      (e) => ChoiceChip(
+                        label: Text(_statusName(e)),
+                        selected: _selectedStatus == e,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedStatus = e;
+                          });
+                        },
+                      ),
+                    )
+                    .toList()
+                : _voucherTypeList
+                    .map(
+                      (e) => ChoiceChip(
+                        label: Text(_typeName(e)),
+                        selected: _selectedType == e,
+                        onSelected: (value) {
+                          setState(() {
+                            _selectedType = e;
+                          });
+                        },
+                      ),
+                    )
+                    .toList()),
+
+        //# voucher list
+        Expanded(child: _buildBody()),
+      ],
+    );
+  }
+
+  FutureBuilder<RespData<List<VoucherEntity>>> _buildBody() {
     return FutureBuilder(
-      future: sl<VoucherRepository>().getAllVoucher(),
+      future: filterByStatus
+          ? sl<VoucherRepository>().getAllVoucherByStatus(_selectedStatus)
+          : sl<VoucherRepository>().getAllVoucherByType(_selectedType),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final respEither = snapshot.data!;
@@ -26,7 +145,11 @@ class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
             (error) => MessageScreen.error(error.message),
             (ok) {
               if (ok.data!.isEmpty) {
-                return const MessageScreen(message: 'Không tìm thấy voucher nào của shop!');
+                return MessageScreen(
+                  message: 'Không tìm thấy voucher nào của shop!',
+                  onPressed: () => setState(() {}),
+                  buttonLabel: 'Tải lại',
+                );
               }
 
               return RefreshIndicator(

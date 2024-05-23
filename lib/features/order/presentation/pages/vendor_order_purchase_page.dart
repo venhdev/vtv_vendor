@@ -73,7 +73,7 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
       case OrderStatus.PROCESSING:
         return OrderPurchaseItemAction(
           label: 'Đơn hàng đã đóng gói xong?',
-          buttonLabel: 'Đóng gói xong',
+          buttonLabel: 'Đã đóng gói',
           onPressed: () => VendorHandler.updateOrderStatus(
             context,
             order.orderId!,
@@ -85,7 +85,7 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
         );
       case OrderStatus.WAITING:
         return OrderPurchaseItemAction(
-          label: 'Đơn hàng đã bị hủy?',
+          label: 'Đơn hàng đã bị hủy!',
           buttonLabel: 'Xác nhận hủy',
           onPressed: () => VendorHandler.updateOrderStatus(
             context,
@@ -95,6 +95,30 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
           ),
           backgroundColor: Colors.red.shade100,
           buttonColor: Colors.red.shade400,
+        );
+      case OrderStatus.PICKUP_PENDING:
+        return OrderPurchaseItemAction(
+          label: 'Hiện thị mã QR vận đơn',
+          buttonLabel: 'Mở',
+          onPressed: () async {
+            final respEither = await showDialogToPerform(
+              context,
+              dataCallback: () => sl<VendorOrderRepository>().getOrderDetail(order.orderId!),
+              closeBy: (context, result) => Navigator.of(context).pop(result),
+            );
+
+            final orderDetail = respEither?.fold((error) => null, (ok) => ok.data!);
+            if (orderDetail == null || !context.mounted) return;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return QrViewPage(data: orderDetail.transport!.transportId);
+                },
+              ),
+            );
+          },
+          backgroundColor: Colors.blue.shade100,
+          buttonColor: Colors.blue.shade400,
         );
       default:
         return const SizedBox.shrink();

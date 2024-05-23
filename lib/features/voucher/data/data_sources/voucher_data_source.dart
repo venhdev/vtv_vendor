@@ -31,7 +31,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
   Future<SuccessResponse<VoucherEntity>> addVoucher(VoucherEntity voucher) async {
     assert(voucher.status == Status.ACTIVE || voucher.status == Status.DELETED);
 
-    final url = baseUri(path: kAPIVoucherAddURL);
+    final url = uriBuilder(path: kAPIVoucherAddURL);
     final response = await _dio.postUri(url, data: voucher.toMap());
 
     return handleDioResponse<VoucherEntity, Map<String, dynamic>>(
@@ -43,7 +43,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
 
   @override
   Future<SuccessResponse<List<VoucherEntity>>> getAllVoucher() async {
-    final url = baseUri(path: kAPIVoucherGetAllURL);
+    final url = uriBuilder(path: kAPIVoucherGetAllURL);
 
     final response = await _dio.getUri(url);
 
@@ -58,7 +58,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
   Future<SuccessResponse<List<VoucherEntity>>> getAllVoucherByStatus(Status status) async {
     assert(status == Status.ACTIVE || status == Status.DELETED);
 
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVoucherGetAllByStatusURL,
       queryParameters: {'status': status.name},
     );
@@ -74,7 +74,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
 
   @override
   Future<SuccessResponse<List<VoucherEntity>>> getAllVoucherByType(VoucherTypes type) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVoucherGetAllByTypeURL,
       queryParameters: {'type': type.name},
     );
@@ -90,7 +90,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
 
   @override
   Future<SuccessResponse<VoucherEntity>> getVoucherDetail(int voucherId) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVoucherDetailURL,
       pathVariables: {'voucherId': voucherId.toString()},
     );
@@ -108,7 +108,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
   Future<SuccessResponse<VoucherEntity>> updateVoucher(VoucherEntity voucher) async {
     assert(voucher.status == Status.ACTIVE || voucher.status == Status.DELETED);
 
-    final url = baseUri(path: kAPIVoucherUpdateURL);
+    final url = uriBuilder(path: '$kAPIVoucherUpdateURL/${voucher.voucherId}');
 
     final response = await _dio.putUri(url, data: voucher.toMap());
 
@@ -121,7 +121,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
 
   @override
   Future<SuccessResponse<VoucherEntity>> updateVoucherStatus(String voucherId, Status status) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVoucherUpdateStatusURL,
       pathVariables: {'voucherId': voucherId},
       queryParameters: {'status': status.name},

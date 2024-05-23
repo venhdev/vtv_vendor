@@ -9,8 +9,6 @@ import '../../domain/entities/dto/add_update_product_param.dart';
 import '../../domain/repository/vendor_product_repository.dart';
 import 'add_update_product_page.dart';
 
-const size = 10;
-
 const List<Status> _tabPage = [
   Status.ACTIVE,
   Status.INACTIVE,
@@ -35,7 +33,7 @@ String vendorProductStatusName(Status method) {
   }
 }
 
-FRespData<ProductPageResp> paginatedDataByStatus(Status status, int page) async {
+FRespData<ProductPageResp> paginatedDataByStatus(Status status, int page, int size) async {
   switch (status) {
     case Status.ACTIVE:
       return await sl<VendorProductRepository>().getProductByStatus(page, size, Status.ACTIVE);
@@ -103,7 +101,7 @@ class _TabViewByStatusState extends State<TabViewByStatus> {
     super.initState();
     lazyController = LazyListController<ProductEntity>(
       items: [],
-      paginatedData: (page) => paginatedDataByStatus(widget.status, page),
+      paginatedData: (page, size) => paginatedDataByStatus(widget.status, page, size),
       scrollController: ScrollController(),
       auto: true,
       useGrid: false,
@@ -243,7 +241,7 @@ class VendorProductItem extends StatelessWidget {
                   children: [
                     Text(product.name),
                     Text(
-                      '${StringUtils.formatCurrency(product.minPrice)} - ${StringUtils.formatCurrency(product.maxPrice)}',
+                      '${ConversionUtils.formatCurrency(product.minPrice)} - ${ConversionUtils.formatCurrency(product.maxPrice)}',
                     ),
                   ],
                 ),

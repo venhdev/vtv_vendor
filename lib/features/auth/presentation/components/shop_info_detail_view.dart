@@ -45,7 +45,7 @@ class ShopInfoDetailView extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return ShopInfoDetailPage(
+                        return ShopDetailPage(
                           shopDetail: ok.data!,
                           bottomActionBuilder: ElevatedButton(
                             onPressed: () {

@@ -12,7 +12,7 @@ import 'package:vtv_common/config.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
 
-import 'config/dio/auth_vendor_interceptor.dart';
+import 'config/dio/vendor_auth_interceptor.dart';
 import 'features/notification/data/data_sources/vendor_notification_data_source.dart';
 import 'features/notification/data/repository/vendor_notification_repository_impl.dart';
 import 'features/notification/domain/repository/vendor_notification_repository.dart';
@@ -24,9 +24,9 @@ import 'features/auth/domain/repository/profile_repository.dart';
 import 'features/product/data/data_sources/vendor_product_data_source.dart';
 import 'features/product/data/repository/vendor_product_repository_impl.dart';
 import 'features/product/domain/repository/vendor_product_repository.dart';
-import 'features/vendor/data/data_sources/vendor_data_source.dart';
-import 'features/vendor/data/repository/vendor_repository_impl.dart';
-import 'features/vendor/domain/repository/vendor_repository.dart';
+import 'features/wallet/data/data_sources/wallet_data_source.dart';
+import 'features/wallet/data/repository/wallet_repository_impl.dart';
+import 'features/wallet/domain/repository/wallet_repository.dart';
 import 'features/voucher/data/data_sources/voucher_data_source.dart';
 import 'features/voucher/domain/repository/voucher_repository.dart';
 
@@ -52,7 +52,7 @@ Future<void> initializeLocator() async {
         responseHeader: false,
         error: false,
       ),
-      AuthVendorInterceptor(),
+      VendorAuthInterceptor(),
       ErrorInterceptor(),
     ],
   );
@@ -76,7 +76,7 @@ Future<void> initializeLocator() async {
   sl.registerSingleton<VoucherDataSource>(VoucherDataSourceImpl(sl()));
 
   sl.registerSingleton<ProfileDataSource>(ProfileDataSourceImpl(sl()));
-  sl.registerSingleton<VendorDataSource>(VendorDataSourceImpl(sl()));
+  sl.registerSingleton<WalletDataSource>(WalletDataSourceImpl(sl()));
   sl.registerSingleton<VendorOrderDataSource>(OrderVendorDataSourceImpl(sl()));
 
   //! Repository

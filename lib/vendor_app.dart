@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vendor/features/notification/presentation/pages/vendor_notification_page.dart';
-import 'package:vendor/features/vendor/presentation/vendor_wallet_history_page.dart';
+import 'package:vendor/features/wallet/presentation/pages/vendor_wallet_history_page.dart';
 import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 

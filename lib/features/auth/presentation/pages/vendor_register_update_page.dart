@@ -283,7 +283,7 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         Expanded(
           child: TextButton(
             child: Text(_openTime != null
-                ? 'Giờ mở cửa: ${StringUtils.convertDateTimeToString(_openTime!, pattern: 'hh:mm aa')}'
+                ? 'Giờ mở cửa: ${ConversionUtils.convertDateTimeToString(_openTime!, pattern: 'hh:mm aa')}'
                 : 'Chọn giờ mở cửa'),
             onPressed: () async {
               final time = await showTimePicker(
@@ -310,7 +310,7 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         Expanded(
           child: TextButton(
             child: Text(_closeTime != null
-                ? 'Giờ đóng cửa: ${StringUtils.convertDateTimeToString(_closeTime!, pattern: 'hh:mm aa')}'
+                ? 'Giờ đóng cửa: ${ConversionUtils.convertDateTimeToString(_closeTime!, pattern: 'hh:mm aa')}'
                 : 'Chọn giờ đóng cửa'),
             onPressed: () async {
               final time = await showTimePicker(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vendor/features/vendor/domain/repository/vendor_repository.dart';
+import 'package:vendor/features/wallet/domain/repository/wallet_repository.dart';
 import 'package:vtv_common/wallet.dart';
 
-import '../../../../service_locator.dart';
+import '../../../../../service_locator.dart';
 
 class VendorWalletHistoryPage extends StatelessWidget {
   const VendorWalletHistoryPage({super.key});

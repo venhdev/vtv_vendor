@@ -4,6 +4,7 @@ import 'package:vtv_common/core.dart';
 import '../../../../service_locator.dart';
 import '../../../auth/domain/repository/profile_repository.dart';
 import '../../../auth/presentation/components/shop_info_detail_view.dart';
+import '../components/menu_item.dart';
 import '../components/order_purchase_tracking.dart';
 import 'add_update_product_page.dart';
 import 'vendor_product_page.dart';
@@ -80,30 +81,6 @@ class _VendorHomePageState extends State<VendorHomePage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class MenuItem extends StatelessWidget {
-  const MenuItem(
-    this.label,
-    this.icon, {
-    super.key,
-    this.onPressed,
-  });
-  final String label;
-  final IconData icon;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconTextButton(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      label: label,
-      leadingIcon: icon,
-      fontSize: 12,
-      reverseDirection: true,
-      onPressed: onPressed,
     );
   }
 }

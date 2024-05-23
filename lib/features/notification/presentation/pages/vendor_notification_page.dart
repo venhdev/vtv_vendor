@@ -9,8 +9,6 @@ import '../../../../core/handler/vendor_handler.dart';
 import '../../../../service_locator.dart';
 import '../../domain/repository/vendor_notification_repository.dart';
 
-const int _notificationPerPage = 20;
-
 //! this page is a copy of notification_page.dart (flutter vtv)
 class VendorNotificationPage extends StatefulWidget {
   const VendorNotificationPage({super.key});
@@ -26,11 +24,12 @@ class _VendorNotificationPageState extends State<VendorNotificationPage> {
   void initState() {
     super.initState();
     _lazyListController = LazyListController<NotificationEntity>.sliver(
-      paginatedData: (page) => sl<VendorNotificationRepository>().getPageNotifications(page, _notificationPerPage),
+      paginatedData: (page, size) => sl<VendorNotificationRepository>().getPageNotifications(page, size),
       items: [],
       scrollController: ScrollController(),
       itemBuilder: (_, index, data) => notificationItem(data, index),
       showLoadingIndicator: true,
+      lastPageMessage: 'Không có thông báo nào!',
     )..init();
   }
 

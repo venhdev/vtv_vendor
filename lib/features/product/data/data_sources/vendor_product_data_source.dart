@@ -68,7 +68,7 @@ class VendorProductDataSourceImpl implements VendorProductDataSource {
 
     FormData formData = FormData.fromMap(mapData);
 
-    final url = baseUri(path: kAPIVendorProductAddURL);
+    final url = uriBuilder(path: kAPIVendorProductAddURL);
 
     final response = await _dio.postUri(
       url,
@@ -89,7 +89,7 @@ class VendorProductDataSourceImpl implements VendorProductDataSource {
 
   @override
   Future<SuccessResponse<ProductPageResp>> getProductByStatus(int page, int size, Status status) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVendorProductPageStatusURL,
       queryParameters: {
         'page': page,
@@ -111,7 +111,7 @@ class VendorProductDataSourceImpl implements VendorProductDataSource {
 
   @override
   Future<SuccessResponse<Object?>> restoreProduct(String productId) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVendorProductRestoreURL,
       pathVariables: {
         'productId': productId,
@@ -125,7 +125,7 @@ class VendorProductDataSourceImpl implements VendorProductDataSource {
 
   @override
   Future<SuccessResponse<Object?>> updateProductStatus(String productId, Status status) async {
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVendorProductUpdateStatusURL,
       pathVariables: {
         'productId': productId,
@@ -174,7 +174,7 @@ class VendorProductDataSourceImpl implements VendorProductDataSource {
 
     FormData formData = FormData.fromMap(mapData);
 
-    final url = baseUri(
+    final url = uriBuilder(
       path: kAPIVendorProductUpdateURL,
       pathVariables: {
         'productId': productId.toString(),

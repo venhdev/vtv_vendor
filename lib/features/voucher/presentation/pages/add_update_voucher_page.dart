@@ -10,11 +10,6 @@ import 'package:vtv_common/order.dart';
 import '../../../../service_locator.dart';
 import '../../domain/repository/voucher_repository.dart';
 
-// const List<VoucherTypes> _shopVoucherTypes = [
-//   VoucherTypes.MONEY_SHOP,
-//   VoucherTypes.PERCENTAGE_SHOP,
-// ];
-
 const List<String> _voucherTypes = ['percent', 'money'];
 
 class AddUpdateVoucherPage extends StatefulWidget {
@@ -31,7 +26,11 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
   void showLoading() => {if (mounted) setState(() => _isLoading = true)};
   void hideLoading() => {if (mounted) setState(() => _isLoading = false)};
 
-  // final _discountController = TextEditingController();
+  final _codeController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _desController = TextEditingController();
+  final _discountController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   late VoucherEntity _voucher;
 
@@ -41,11 +40,19 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
   void initState() {
     super.initState();
     if (widget.voucher != null) {
+      //# update voucher
       _voucher = widget.voucher!;
-      // _discountController.text = _voucher.discount.toString();
+      _codeController.text = _voucher.codeNoPrefix;
+      _nameController.text = _voucher.name;
+      _desController.text = _voucher.description;
+      _discountController.text = ConversionUtils.thousandSeparator(_voucher.discount);
     } else {
-      _voucher = VoucherEntity.empty();
+      //# add voucher
+      _voucher = VoucherEntity.addInit();
       _voucher = _voucher.copyWith(status: Status.ACTIVE);
+      _codeController.text = _voucher.code;
+      _nameController.text = _voucher.name;
+      _desController.text = _voucher.description;
     }
     final username = context.read<AuthCubit>().state.auth!.userInfo.username!;
     prefixCode = '${username.length > 5 ? username.substring(0, 5).toUpperCase() : username.toUpperCase()}-';
@@ -68,10 +75,8 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                 const SizedBox(height: 4),
                 //# voucher code
                 OutlineTextField(
-                  controller: TextEditingController(
-                    text: widget.voucher != null ? _voucher.codeNoPrefix : _voucher.code,
-                  ),
-                  readOnly: widget.voucher != null, // disable editing description when updating voucher
+                  controller: _codeController,
+                  // readOnly: widget.voucher != null, // disable editing description when updating voucher
                   inputFormatters: [UpperCaseTextFormatter()],
                   maxLength: 15,
                   label: 'Mã Voucher',
@@ -90,7 +95,7 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
 
                 //# voucher name
                 OutlineTextField(
-                  controller: TextEditingController(text: _voucher.name),
+                  controller: _nameController,
                   label: 'Tên Voucher',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -106,7 +111,7 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
 
                 //# voucher description
                 OutlineTextField(
-                  controller: TextEditingController(text: _voucher.description),
+                  controller: _desController,
                   label: 'Mô tả',
                   maxLines: null,
                   validator: (value) {
@@ -161,9 +166,8 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
 
                 //# discount (money or percentage)
                 OutlineTextField(
-                  // controller: _discountController,
                   inputFormatters: [DecimalFormatter()],
-                  controller: TextEditingController(text: _voucher.discount.toString()),
+                  controller: _discountController,
                   prefixText: _voucher.type == VoucherTypes.MONEY_SHOP ? '₫ ' : '% ',
                   label: 'Giảm giá',
                   keyboardType: TextInputType.number,
@@ -171,7 +175,7 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                     if (value == null || value.isEmpty) {
                       return 'Nhập giảm giá';
                     }
-                    
+
                     // remove all ',' in value (format number with comma separator)
                     value = value.replaceAll(',', '');
                     if (int.tryParse(value) == null) {
@@ -188,6 +192,8 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                     return null;
                   },
                   onChanged: (value) {
+                    value = value.replaceAll(',', '');
+                    log('${int.tryParse(value)}');
                     _voucher = _voucher.copyWith(discount: int.tryParse(value));
                   },
                 ),
@@ -208,8 +214,8 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    _voucher = _voucher.copyWith(quantity: int.tryParse(value!)!);
+                  onChanged: (value) {
+                    _voucher = _voucher.copyWith(quantity: int.tryParse(value));
                   },
                 ),
                 const SizedBox(height: 8),
@@ -223,6 +229,7 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                           DateTimeUtils.showDateTimePicker(
                             context: context,
                             initialDateTime: _voucher.startDate,
+                            pastDatesEnabled: true,
                           ).then((value) {
                             if (value != null) {
                               setState(() {
@@ -235,8 +242,21 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                           children: [
                             const Text('Ngày bắt đầu'),
                             Text(
-                              StringUtils.convertDateTimeToString(_voucher.startDate, pattern: 'dd/MM/yyyy hh:mm aa'),
+                              ConversionUtils.convertDateTimeToString(_voucher.startDate,
+                                  pattern: 'dd/MM/yyyy hh:mm aa'),
                             ),
+                            Text(
+                              DateTimeUtils.getRemainingTime(
+                                _voucher.startDate,
+                                showOverdueTime: true,
+                                prefixRemaining: 'Bắt đầu sau: ',
+                              ),
+                              style: VTVTheme.hintTextStyle,
+                            ),
+                            // Text('_voucher.startDate: ${_voucher.startDate}'),
+                            // Text('_voucher.startDate isUtc: ${_voucher.startDate.isUtc}'),
+                            // Text('_voucher.startDate toUtc: ${_voucher.startDate.toUtc()}'),
+                            // Text('_voucher.startDate toLocal: ${_voucher.startDate.toLocal()}'),
                           ],
                         ),
                       ),
@@ -257,7 +277,12 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                         child: Column(
                           children: [
                             const Text('Ngày kết thúc'),
-                            Text(StringUtils.convertDateTimeToString(_voucher.endDate, pattern: 'dd/MM/yyyy hh:mm:aa')),
+                            Text(ConversionUtils.convertDateTimeToString(_voucher.endDate,
+                                pattern: 'dd/MM/yyyy hh:mm:aa')),
+                            Text(
+                              DateTimeUtils.getRemainingTime(_voucher.endDate, showOverdueTime: true),
+                              style: VTVTheme.hintTextStyle,
+                            )
                           ],
                         ),
                       ),
@@ -295,10 +320,13 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
       _formKey.currentState!.save();
       if (widget.voucher != null) {
         // update voucher
-        log('Cập nhật voucher');
-        log(_voucher.toMap().toString());
 
         showLoading();
+        _voucher = _voucher.copyWith(
+          code: prefixCode + _voucher.code,
+        );
+        log('Cập nhật voucher: ${_voucher.toJson()}');
+
         sl<VoucherRepository>().updateVoucher(_voucher).then((respEither) {
           respEither.fold(
             (error) {
@@ -339,7 +367,3 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
     }
   }
 }
-
-// Usage:
-// You can navigate to this page from another page using Navigator.push():
-// Navigator.push(context, MaterialPageRoute(builder: (context) => VoucherPage()));

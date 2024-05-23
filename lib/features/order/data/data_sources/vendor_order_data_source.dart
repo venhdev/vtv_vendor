@@ -20,7 +20,7 @@ class OrderVendorDataSourceImpl implements VendorOrderDataSource {
 
   @override
   Future<SuccessResponse<MultiOrderEntity>> getOrderList() async {
-    final url = baseUri(path: kAPIVendorOrderListURL);
+    final url = uriBuilder(path: kAPIVendorOrderListURL);
 
     final response = await _dio.getUri(url);
 
@@ -33,7 +33,7 @@ class OrderVendorDataSourceImpl implements VendorOrderDataSource {
 
   @override
   Future<SuccessResponse<MultiOrderEntity>> getOrderListByStatus(OrderStatus status) async {
-    final url = baseUri(path: '$kAPIVendorOrderListStatusURL/${status.name}');
+    final url = uriBuilder(path: '$kAPIVendorOrderListStatusURL/${status.name}');
 
     final response = await _dio.getUri(url);
 
@@ -46,7 +46,7 @@ class OrderVendorDataSourceImpl implements VendorOrderDataSource {
 
   @override
   Future<SuccessResponse<OrderDetailEntity>> updateOrderStatus(String orderId, OrderStatus status) async {
-    final url = baseUri(path: kAPIVendorOrderUpdateStatusURL, pathVariables: {
+    final url = uriBuilder(path: kAPIVendorOrderUpdateStatusURL, pathVariables: {
       'orderId': orderId,
       'status': status.name,
     });
@@ -62,7 +62,7 @@ class OrderVendorDataSourceImpl implements VendorOrderDataSource {
   
   @override
   Future<SuccessResponse<OrderDetailEntity>> getOrderDetail(String orderId) async{
-    final url = baseUri(path: '$kAPIVendorOrderDetailURL/$orderId');
+    final url = uriBuilder(path: '$kAPIVendorOrderDetailURL/$orderId');
 
     final response = await _dio.getUri(url);
 

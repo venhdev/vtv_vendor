@@ -56,7 +56,7 @@ class VendorVoucherItem extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: voucher.type == VoucherTypes.MONEY_SHOP
-                                ? StringUtils.formatCurrency(voucher.discount)
+                                ? ConversionUtils.formatCurrency(voucher.discount)
                                 : '${voucher.discount}%',
                           ),
                         ],
@@ -77,35 +77,43 @@ class VendorVoucherItem extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Text('voucher.startDate isUTC: ${voucher.startDate.isUtc} -> ${voucher.startDate.toIso8601String()}'),
+                // Text('UTC time: ${voucher.startDate.toUtc()}'),
+                // Text('Local Time: ${voucher.startDate.toLocal()}'),
+                // Text('now isUtc: ${DateTime.now().isUtc}'),
+                // Text('now: ${DateTime.now()} - utcNow: ${DateTime.now().toUtc()}\n\n\n.'),
+                // SelectableText('nowIso8601: ${DateTime.now().toIso8601String()}\nutcNow: ${DateTime.now().toUtc().toIso8601String()}\n\n\n.'),
+                // const Divider(),
+
                 Text.rich(
                   TextSpan(
                       text:
-                          'Ngày bắt đầu: ${StringUtils.convertDateTimeToString(voucher.startDate, pattern: 'dd/MM/yyyy HH:mm')} ',
+                          'Ngày bắt đầu: ${ConversionUtils.convertDateTimeToString(voucher.startDate, pattern: 'dd/MM/yyyy hh:mm aa')} ',
                       children: [
                         if (voucher.status == Status.ACTIVE && DateTime.now().isBefore(voucher.endDate))
                           TextSpan(
                             style: VTVTheme.hintTextStyle,
-                            text: '(${StringUtils.getRemainingTime(
+                            text: '(${DateTimeUtils.getRemainingTime(
                               showOverdueTime: true,
                               voucher.startDate,
                               prefixRemaining: 'Bắt đầu sau: ',
-                              prefixOverdue: 'Đang sử dụng: ',
+                              prefixOverdue: 'Đã bắt đầu: ',
                             )})',
                           ),
                       ]),
                 ),
                 // Text(
-                //   'Ngày kết thúc: ${StringUtils.convertDateTimeToString(voucher.endDate, pattern: 'dd/MM/yyyy HH:mm')} (${StringUtils.getRemainingTime(voucher.endDate)})',
+                //   'Ngày kết thúc: ${ConversionUtils.convertDateTimeToString(voucher.endDate, pattern: 'dd/MM/yyyy HH:mm')} (${DateTimeUtils.getRemainingTime(voucher.endDate)})',
                 // ),
                 Text.rich(
                   TextSpan(
                       text:
-                          'Ngày kết thúc: ${StringUtils.convertDateTimeToString(voucher.endDate, pattern: 'dd/MM/yyyy HH:mm')} ',
+                          'Ngày kết thúc: ${ConversionUtils.convertDateTimeToString(voucher.endDate, pattern: 'dd/MM/yyyy hh:mm aa')} ',
                       children: [
                         if (voucher.status == Status.ACTIVE)
                           TextSpan(
                             style: VTVTheme.hintTextStyle,
-                            text: '(${StringUtils.getRemainingTime(
+                            text: '(${DateTimeUtils.getRemainingTime(
                               showOverdueTime: true,
                               voucher.endDate,
                               prefixRemaining: 'Kết thúc sau: ',
