@@ -16,6 +16,8 @@ abstract class VendorShopCategoryDataSource {
   Future<SuccessResponse<ShopCategoryEntity>> addShopCategory(AddUpdateShopCategoryRequest addParam);
   Future<SuccessResponse<ShopCategoryEntity>> updateShopCategory(
       int categoryShopId, AddUpdateShopCategoryRequest updateParam);
+
+  Future<SuccessResponse> deleteShopCategory(int categoryShopId);
 }
 
 class VendorShopCategoryDataSourceImpl implements VendorShopCategoryDataSource {
@@ -113,6 +115,22 @@ class VendorShopCategoryDataSourceImpl implements VendorShopCategoryDataSource {
       response,
       url,
       parse: (jsonMap) => ShopCategoryEntity.fromMap(jsonMap['categoryShopDTO']),
+    );
+  }
+
+  @override
+  Future<SuccessResponse<Object?>> deleteShopCategory(int categoryShopId) async {
+    final url = uriBuilder(
+      path: kAPICategoryShopDeleteURL,
+      pathVariables: {'categoryShopId': categoryShopId.toString()},
+    );
+
+    final response = await _dio.deleteUri(url);
+
+    return handleDioResponse(
+      response,
+      url,
+      hasData: false,
     );
   }
 }

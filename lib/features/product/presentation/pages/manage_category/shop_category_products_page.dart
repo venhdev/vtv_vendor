@@ -9,7 +9,6 @@ import '../../../domain/repository/vendor_product_repository.dart';
 import '../../components/product_of_shop_category_item.dart';
 import 'product_shop_picker_page.dart';
 
-
 // this page is used to manage(add/remove) products of a shop category
 class ShopCategoryProductsPage extends StatefulWidget {
   const ShopCategoryProductsPage({super.key, required this.shopCategory});
@@ -127,52 +126,58 @@ class _ShopCategoryProductsPageState extends State<ShopCategoryProductsPage> {
                     },
                     child: const Icon(Icons.add),
                   ),
-            body: ListView.builder(
-              itemCount: _shopCategory!.products!.length,
-              itemBuilder: (context, index) {
-                final product = _shopCategory!.products![index];
-                return Row(
-                  children: [
-                    _isSelecting
-                        ? Checkbox(
-                            value: selectedProductIds.contains(product.productId),
-                            onChanged: (value) {
-                              if (value!) {
-                                selectedProductIds.add(product.productId);
-                              } else {
-                                selectedProductIds.remove(product.productId);
-                              }
-                              setState(() {});
-                            },
-                          )
-                        : const SizedBox.shrink(),
-                    Expanded(
-                      child: ProductOfShopCategoryItem(
-                        product: product,
-                        onLongPress: () {
-                          setState(() {
-                            _isSelecting = !_isSelecting;
-                            selectedProductIds.clear();
-                            selectedProductIds.add(product.productId);
-                          });
-                        },
-                        onPressed: _isSelecting
-                            ? () {
-                                setState(() {
-                                  if (selectedProductIds.contains(product.productId)) {
-                                    selectedProductIds.remove(product.productId);
-                                  } else {
-                                    selectedProductIds.add(product.productId);
-                                  }
-                                });
-                              }
-                            : null,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
+            body: _shopCategory!.products!.isEmpty
+                ? const MessageScreen(message: 'Không có sản phẩm nào trong danh mục này')
+                : buildListProduct(),
           );
+  }
+
+  ListView buildListProduct() {
+    return ListView.builder(
+      itemCount: _shopCategory!.products!.length,
+      itemBuilder: (context, index) {
+        final product = _shopCategory!.products![index];
+        return Row(
+          children: [
+            _isSelecting
+                ? Checkbox(
+                    value: selectedProductIds.contains(product.productId),
+                    onChanged: (value) {
+                      if (value!) {
+                        selectedProductIds.add(product.productId);
+                      } else {
+                        selectedProductIds.remove(product.productId);
+                      }
+                      setState(() {});
+                    },
+                  )
+                : const SizedBox.shrink(),
+            Expanded(
+              child: ProductOfShopCategoryItem(
+                product: product,
+                onLongPress: () {
+                  setState(() {
+                    _isSelecting = !_isSelecting;
+                    selectedProductIds.clear();
+                    selectedProductIds.add(product.productId);
+                  });
+                },
+                onPressed: _isSelecting
+                    ? () {
+                        setState(() {
+                          if (selectedProductIds.contains(product.productId)) {
+                            selectedProductIds.remove(product.productId);
+                          } else {
+                            selectedProductIds.add(product.productId);
+                          }
+                        });
+                      }
+                    : null,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

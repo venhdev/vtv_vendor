@@ -154,4 +154,10 @@ class VendorProductRepositoryImpl implements VendorProductRepository {
     return await handleDataResponseFromDataSource(
         dataCallback: () => _shopCategoryDataSource.updateShopCategory(categoryShopId, updateParam));
   }
+
+  @override
+  FRespEither deleteShopCategory(int categoryShopId) async {
+    return await handleDataResponseFromDataSource(
+        dataCallback: () => _shopCategoryDataSource.deleteShopCategory(categoryShopId));
+  }
 }

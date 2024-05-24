@@ -39,4 +39,5 @@ abstract class VendorProductRepository {
   FRespData<ShopCategoryEntity> removeProductsFromCategoryShop(int categoryShopId, List<int> productIds);
   FRespData<ShopCategoryEntity> addShopCategory(AddUpdateShopCategoryRequest addParam);
   FRespData<ShopCategoryEntity> updateShopCategory(int categoryShopId, AddUpdateShopCategoryRequest updateParam);
+  FRespEither deleteShopCategory(int categoryShopId);
 }

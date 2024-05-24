@@ -36,6 +36,7 @@ class _AddUpdateShopCategoryPageState extends State<AddUpdateShopCategoryPage> {
         changeImage: false,
         image: widget.shopCategory!.image,
       );
+      _nameController.text = widget.shopCategory!.name;
       _isNetworkImage = true;
     }
   }
@@ -63,6 +64,7 @@ class _AddUpdateShopCategoryPageState extends State<AddUpdateShopCategoryPage> {
       respEither.fold(
         (error) => Fluttertoast.showToast(msg: error.message ?? 'Cập nhật danh mục không thành công'),
         (ok) {
+          Fluttertoast.showToast(msg: ok.message ?? 'Cập nhật danh mục thành công');
           Navigator.of(context).pop(true);
         },
       );
@@ -77,6 +79,7 @@ class _AddUpdateShopCategoryPageState extends State<AddUpdateShopCategoryPage> {
       respEither.fold(
         (error) => Fluttertoast.showToast(msg: error.message ?? 'Thêm danh mục không thành công'),
         (ok) {
+          Fluttertoast.showToast(msg: ok.message ?? 'Thêm danh mục thành công');
           Navigator.of(context).pop(true);
         },
       );
