@@ -5,6 +5,7 @@ import 'package:vendor/features/wallet/presentation/pages/vendor_wallet_history_
 import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 
+import 'features/chat/presentation/pages/vendor_chat_room_page.dart';
 import 'features/voucher/presentation/pages/add_update_voucher_page.dart';
 import 'features/voucher/presentation/pages/vendor_voucher_manage_page.dart';
 import 'vendor_drawer.dart';
@@ -59,6 +60,7 @@ class _AppScaffoldState extends State<AppScaffold> {
     switch (index) {
       case 0:
         return [
+          //# notification
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
@@ -66,6 +68,20 @@ class _AppScaffoldState extends State<AppScaffold> {
                 MaterialPageRoute(
                   builder: (context) {
                     return const VendorNotificationPage();
+                  },
+                ),
+              );
+            },
+          ),
+          
+          //# chat
+          IconButton(
+            icon: const Icon(Icons.chat),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const VendorChatRoomPage();
                   },
                 ),
               );

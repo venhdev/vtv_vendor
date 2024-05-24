@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/features/auth/data/data_sources/profile_data_source.dart';
 import 'package:vtv_common/auth.dart';
+import 'package:vtv_common/chat.dart';
 import 'package:vtv_common/config.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
@@ -70,19 +71,21 @@ Future<void> initializeLocator() async {
   sl.registerSingleton<FirebaseCloudMessagingManager>(FirebaseCloudMessagingManager(fMessaging));
 
   //! Data source
-  sl.registerSingleton<VendorShopCategoryDataSource>(VendorShopCategoryDataSourceImpl(sl()));
   sl.registerSingleton<GuestDataSource>(GuestDataSourceImpl(sl()));
+  sl.registerSingleton<ChatDataSource>(ChatDataSourceImpl(sl()));
+  sl.registerSingleton<ProfileDataSource>(ProfileDataSourceImpl(sl()));
+  sl.registerSingleton<WalletDataSource>(WalletDataSourceImpl(sl()));
+  sl.registerSingleton<VendorOrderDataSource>(OrderVendorDataSourceImpl(sl()));
+
+  sl.registerSingleton<VendorShopCategoryDataSource>(VendorShopCategoryDataSourceImpl(sl()));
   sl.registerSingleton<VendorNotificationDataSource>(VendorNotificationDataSourceImpl(sl()));
   sl.registerSingleton<VendorProductDataSource>(VendorProductDataSourceImpl(sl()));
   sl.registerSingleton<AuthDataSource>(AuthDataSourceImpl(sl(), sl(), sl(), sl()));
   sl.registerSingleton<VoucherDataSource>(VoucherDataSourceImpl(sl()));
 
-  sl.registerSingleton<ProfileDataSource>(ProfileDataSourceImpl(sl()));
-  sl.registerSingleton<WalletDataSource>(WalletDataSourceImpl(sl()));
-  sl.registerSingleton<VendorOrderDataSource>(OrderVendorDataSourceImpl(sl()));
-
   //! Repository
   sl.registerSingleton<GuestRepository>(GuestRepositoryImpl(sl()));
+  sl.registerSingleton<ChatRepository>(ChatRepositoryImpl(sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
   sl.registerSingleton<VendorRepository>(VendorRepositoryImpl(sl()));
   sl.registerSingleton<VendorProductRepository>(VendorProductRepositoryImpl(sl(), sl(), sl()));
