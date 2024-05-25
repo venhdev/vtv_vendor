@@ -9,8 +9,8 @@ import '../../domain/entities/add_product_resp.dart';
 import '../../domain/entities/category_with_nested_children_entity.dart';
 import '../../domain/entities/dto/add_update_product_param.dart';
 import '../../domain/repository/vendor_product_repository.dart';
-import '../data_sources/vendor_product_data_source.dart';
-import '../data_sources/shop_category_data_source.dart';
+import '../datasources/vendor_product_data_source.dart';
+import '../datasources/shop_category_data_source.dart';
 
 class VendorProductRepositoryImpl implements VendorProductRepository {
   VendorProductRepositoryImpl(this._dataSource, this._guestDataSource, this._shopCategoryDataSource);

@@ -1,4 +1,4 @@
-import 'package:vendor/features/auth/data/data_sources/profile_data_source.dart';
+import 'package:vendor/features/auth/data/datasources/profile_data_source.dart';
 import 'package:vendor/features/auth/domain/entities/vendor_register_param.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/shop.dart';

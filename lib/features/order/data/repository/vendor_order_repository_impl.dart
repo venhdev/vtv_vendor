@@ -2,7 +2,7 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
 import '../../domain/repository/vendor_order_repository.dart';
-import '../data_sources/vendor_order_data_source.dart';
+import '../datasources/vendor_order_data_source.dart';
 
 class VendorOrderRepositoryImpl implements VendorOrderRepository {
   final VendorOrderDataSource _dataSource;

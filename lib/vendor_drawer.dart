@@ -59,6 +59,16 @@ class _VendorDrawerState extends State<VendorDrawer> {
             },
           ),
 
+          //# revenue page
+          ListTile(
+            title: const Text('Doanh thu'),
+            selected: widget.selectedIndex == 3,
+            onTap: () {
+              widget.onItemTapped(3);
+              Navigator.pop(context);
+            },
+          ),
+
           // NOTE dev
           const Divider(),
           ListTile(

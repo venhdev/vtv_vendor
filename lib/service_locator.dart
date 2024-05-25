@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vendor/features/auth/data/data_sources/profile_data_source.dart';
+import 'package:vendor/features/auth/data/datasources/profile_data_source.dart';
 import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/chat.dart';
 import 'package:vtv_common/config.dart';
@@ -14,22 +14,24 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
 
 import 'config/dio/vendor_auth_interceptor.dart';
-import 'features/notification/data/data_sources/vendor_notification_data_source.dart';
+import 'features/notification/data/datasources/vendor_notification_data_source.dart';
 import 'features/notification/data/repository/vendor_notification_repository_impl.dart';
 import 'features/notification/domain/repository/vendor_notification_repository.dart';
-import 'features/order/data/data_sources/vendor_order_data_source.dart';
+import 'features/order/data/datasources/vendor_order_data_source.dart';
 import 'features/order/data/repository/vendor_order_repository_impl.dart';
 import 'features/order/domain/repository/vendor_order_repository.dart';
 import 'features/auth/data/repository/profile_repository_impl.dart';
 import 'features/auth/domain/repository/profile_repository.dart';
-import 'features/product/data/data_sources/vendor_product_data_source.dart';
-import 'features/product/data/data_sources/shop_category_data_source.dart';
+import 'features/product/data/datasources/vendor_product_data_source.dart';
+import 'features/product/data/datasources/shop_category_data_source.dart';
 import 'features/product/data/repository/vendor_product_repository_impl.dart';
 import 'features/product/domain/repository/vendor_product_repository.dart';
-import 'features/wallet/data/data_sources/wallet_data_source.dart';
+import 'features/revenue/data/datasources/revenue_data_source.dart';
+import 'features/revenue/domain/repository/revenue_repository.dart';
+import 'features/wallet/data/datasources/wallet_data_source.dart';
 import 'features/wallet/data/repository/wallet_repository_impl.dart';
 import 'features/wallet/domain/repository/wallet_repository.dart';
-import 'features/voucher/data/data_sources/voucher_data_source.dart';
+import 'features/voucher/data/datasources/voucher_data_source.dart';
 import 'features/voucher/domain/repository/voucher_repository.dart';
 
 // Service locator
@@ -73,6 +75,7 @@ Future<void> initializeLocator() async {
   //! Data source
   sl.registerSingleton<GuestDataSource>(GuestDataSourceImpl(sl()));
   sl.registerSingleton<ChatDataSource>(ChatDataSourceImpl(sl()));
+  sl.registerSingleton<RevenueDataSource>(RevenueDataSourceImpl(sl()));
   sl.registerSingleton<ProfileDataSource>(ProfileDataSourceImpl(sl()));
   sl.registerSingleton<WalletDataSource>(WalletDataSourceImpl(sl()));
   sl.registerSingleton<VendorOrderDataSource>(OrderVendorDataSourceImpl(sl()));
@@ -85,6 +88,7 @@ Future<void> initializeLocator() async {
 
   //! Repository
   sl.registerSingleton<GuestRepository>(GuestRepositoryImpl(sl()));
+  sl.registerSingleton<RevenueRepository>(RevenueRepositoryImpl(sl()));
   sl.registerSingleton<ChatRepository>(ChatRepositoryImpl(sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
   sl.registerSingleton<VendorRepository>(VendorRepositoryImpl(sl()));

@@ -6,6 +6,8 @@ import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 
 import 'features/chat/presentation/pages/vendor_chat_room_page.dart';
+import 'features/revenue/presentation/components/revenue_chart_by_status.dart';
+import 'features/revenue/presentation/pages/revenue_page.dart';
 import 'features/voucher/presentation/pages/add_update_voucher_page.dart';
 import 'features/voucher/presentation/pages/vendor_voucher_manage_page.dart';
 import 'vendor_drawer.dart';
@@ -51,8 +53,10 @@ class _AppScaffoldState extends State<AppScaffold> {
         return 'Ví tiền';
       case 2:
         return 'Voucher của shop';
+      case 3:
+        return 'Doanh thu';
       default:
-        throw Exception('Invalid index');
+        return 'Vendor App';
     }
   }
 
@@ -73,7 +77,7 @@ class _AppScaffoldState extends State<AppScaffold> {
               );
             },
           ),
-          
+
           //# chat
           IconButton(
             icon: const Icon(Icons.chat),
@@ -129,6 +133,7 @@ class _AppScaffoldState extends State<AppScaffold> {
       VendorHomePage(onItemTapped: _onItemTapped),
       const VendorWalletHistoryPage(),
       const VendorVoucherManagePage(),
+      const RevenuePage(),
     ];
   }
 

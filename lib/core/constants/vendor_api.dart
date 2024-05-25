@@ -87,3 +87,12 @@ const String kAPICategoryShopDeleteProductURL =
 // DELETE
 // /api/vendor/category-shop/delete/{categoryShopId} 
 const String kAPICategoryShopDeleteURL = '/vendor/category-shop/delete/:categoryShopId'; // {categoryShopId}
+
+
+//# revenue-shop-controller
+// GET
+// /api/vendor/shop/revenue/statistics/status/{status}
+const String kAPIRevenueStatisticsByStatusURL = '/vendor/shop/revenue/statistics/status/:status'; // {status}
+// GET
+// /api/vendor/shop/revenue/statistics/product/top/{limit}
+const String kAPIRevenueStatisticsProductTopURL = '/vendor/shop/revenue/statistics/product/top/:limit'; // {limit}

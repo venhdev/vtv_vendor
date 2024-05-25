@@ -2,7 +2,7 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/notification.dart';
 
 import '../../domain/repository/vendor_notification_repository.dart';
-import '../data_sources/vendor_notification_data_source.dart';
+import '../datasources/vendor_notification_data_source.dart';
 
 
 class VendorNotificationRepositoryImpl extends VendorNotificationRepository {

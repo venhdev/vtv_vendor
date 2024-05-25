@@ -1,7 +1,7 @@
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
-import '../../data/data_sources/voucher_data_source.dart';
+import '../../data/datasources/voucher_data_source.dart';
 
 abstract class VoucherRepository {
   //# voucher-shop-controller
