@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vtv_common/core.dart';
 
-import '../components/revenue_chart_by_status.dart';
+import '../components/revenue_chart_by_status_item.dart';
+import '../components/revenue_chart_by_top_sold.dart';
 
 class RevenuePage extends StatelessWidget {
   const RevenuePage({super.key});
@@ -11,19 +12,21 @@ class RevenuePage extends StatelessWidget {
     return const SingleChildScrollView(
       child: Column(
         children: [
-          RevenueByStatusItem(
+          RevenueChartByTopSoldItem(),
+          Divider(),
+          RevenueChartByStatusItem(
             status: OrderStatus.COMPLETED,
             label: 'Thống kê đơn hàng hoàn thành',
           ),
-          RevenueByStatusItem(
+          RevenueChartByStatusItem(
             status: OrderStatus.DELIVERED,
             label: 'Thống kê đơn hàng đã giao',
           ),
-          RevenueByStatusItem(
+          RevenueChartByStatusItem(
             status: OrderStatus.SHIPPING,
             label: 'Thống kê đơn hàng đang giao',
           ),
-          RevenueByStatusItem(
+          RevenueChartByStatusItem(
             status: OrderStatus.CANCEL,
             label: 'Thống kê đơn hàng bị hủy',
           ),
@@ -33,32 +36,21 @@ class RevenuePage extends StatelessWidget {
   }
 }
 
-class RevenueByStatusItem extends StatefulWidget {
-  const RevenueByStatusItem({
+class RevenueChartByTopSoldItem extends StatefulWidget {
+  const RevenueChartByTopSoldItem({
     super.key,
-    required this.status,
-    required this.label,
   });
 
-  final OrderStatus status;
-  final String label;
-
   @override
-  State<RevenueByStatusItem> createState() => _RevenueByStatusItemState();
+  State<RevenueChartByTopSoldItem> createState() => _RevenueChartByTopSoldItemState();
 }
 
-class _RevenueByStatusItemState extends State<RevenueByStatusItem> {
+class _RevenueChartByTopSoldItemState extends State<RevenueChartByTopSoldItem> {
   int _selectedMonth = DateTime.now().month;
 
   @override
   Widget build(BuildContext context) {
     return Wrapper(
-      labelCrossAxisAlignment: CrossAxisAlignment.center,
-      label: WrapperLabel(
-        labelText: widget.label,
-        icon: Icons.checklist_rounded,
-        iconColor: Colors.green,
-      ),
       suffixLabel: DropdownButton<int>(
         value: _selectedMonth,
         items: List.generate(12, (index) {
@@ -74,10 +66,7 @@ class _RevenueByStatusItemState extends State<RevenueByStatusItem> {
           });
         },
       ),
-      child: RevenueChartByStatus(
-        status: widget.status,
-        byMonth: DateTime(DateTime.now().year, _selectedMonth),
-      ),
+      child: RevenueChartByTopSold(limit: 10, byMonth: DateTime(DateTime.now().year, _selectedMonth)),
     );
   }
 }

@@ -25,6 +25,9 @@ class StatisticsTopSoldProductResp {
     required this.statisticsProducts,
   });
 
+  int get maxMoney =>
+      statisticsProducts.map((e) => e.totalMoney).reduce((prev, next) => prev > next ? prev : next);
+
   StatisticsTopSoldProductResp copyWith({
     int? count,
     int? totalOrder,

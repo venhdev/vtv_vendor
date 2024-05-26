@@ -94,16 +94,7 @@ class _RevenueByStatusLineChartState extends State<RevenueByStatusLineChart> {
       minY: 0,
       maxY: ConversionUtils.ceilTo5FirstTwoDigits(widget.data.maxMoney.toDouble()).toDouble(),
       lineTouchData: LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-            return touchedBarSpots.map((barSpot) {
-              return LineTooltipItem(
-                'Ngày ${barSpot.x.toInt()}: ${ConversionUtils.formatCurrency(barSpot.y.toInt())}',
-                const TextStyle(color: Colors.white),
-              );
-            }).toList();
-          },
-        ),
+        touchTooltipData: lineToucherToolTipData(),
       ),
       lineBarsData: [
         LineChartBarData(
@@ -125,6 +116,30 @@ class _RevenueByStatusLineChartState extends State<RevenueByStatusLineChart> {
       ],
     );
   }
+
+  int? getTotalOrderByDay(double date) {
+    try {
+      final order = widget.data.statisticsOrders.firstWhere((element) => element.date.day == date);
+      return order.totalOrder;
+    } on StateError {
+      return null;
+    }
+  }
+
+  LineTouchTooltipData lineToucherToolTipData() {
+    return LineTouchTooltipData(
+      getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+        return touchedBarSpots.map((barSpot) {
+          final total = getTotalOrderByDay(barSpot.x);
+          return LineTooltipItem(
+            // 'Ngày ${barSpot.x.toInt()}: ${ConversionUtils.formatCurrency(barSpot.y.toInt())}',
+            'Ngày ${barSpot.x.toInt()}: ${ConversionUtils.formatCurrencyWithAbbreviation(barSpot.y, fraction: 1)}${(total != null && total != 0) ? '\n($total đơn)' : ''}',
+            const TextStyle(color: Colors.white),
+          );
+        }).toList();
+      },
+    );
+  } 
 
   LineChartData avgData() {
     return LineChartData(

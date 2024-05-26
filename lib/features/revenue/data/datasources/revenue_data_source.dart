@@ -51,6 +51,10 @@ class RevenueDataSourceImpl implements RevenueDataSource {
     final url = uriBuilder(
       path: kAPIRevenueStatisticsProductTopURL,
       pathVariables: {'limit': limit.toString()},
+      queryParameters: {
+        'startDate': startDate.toIso8601String(),
+        'endDate': endDate.toIso8601String(),
+      },
     );
 
     final response = await _dio.getUri(url);
