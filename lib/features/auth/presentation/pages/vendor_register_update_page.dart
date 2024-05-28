@@ -8,7 +8,7 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/profile.dart';
 
 import '../../../../service_locator.dart';
-import '../../domain/entities/vendor_register_param.dart';
+import '../../domain/entities/request/vendor_register_update_request.dart';
 import '../../domain/repository/profile_repository.dart';
 
 //TODO:
@@ -18,7 +18,7 @@ class VendorRegisterUpdatePage extends StatefulWidget {
   const VendorRegisterUpdatePage({super.key, this.isUpdate = false, this.initParam});
 
   final bool isUpdate;
-  final VendorRegisterParam? initParam;
+  final ShopRegisterUpdateRequest? initParam;
 
   @override
   State<VendorRegisterUpdatePage> createState() => _VendorRegisterUpdatePageState();
@@ -26,7 +26,7 @@ class VendorRegisterUpdatePage extends StatefulWidget {
 
 class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
   final _formKey = GlobalKey<FormState>();
-  late VendorRegisterParam _param;
+  late ShopRegisterUpdateRequest _param;
   late bool _isNetworkImage;
 
   final _nameController = TextEditingController();
@@ -53,7 +53,7 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         _wardName.isNotEmpty &&
         _address.isNotEmpty &&
         (_avatarPath != null || (!changeAvatar && widget.isUpdate))) {
-      final VendorRegisterParam param = VendorRegisterParam(
+      final ShopRegisterUpdateRequest param = ShopRegisterUpdateRequest(
         name: _nameController.text,
         phone: _phoneController.text,
         email: _emailController.text,
@@ -97,7 +97,7 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         _wardName.isNotEmpty &&
         _address.isNotEmpty &&
         (_avatarPath != null || (!changeAvatar && widget.isUpdate))) {
-      final VendorRegisterParam param = VendorRegisterParam(
+      final ShopRegisterUpdateRequest param = ShopRegisterUpdateRequest(
         name: _nameController.text,
         phone: _phoneController.text,
         email: _emailController.text,

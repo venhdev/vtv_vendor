@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/shop.dart';
 
-class VendorRegisterParam {
+class ShopRegisterUpdateRequest {
   final String name;
   final String address;
   final String provinceName;
@@ -19,7 +19,7 @@ class VendorRegisterParam {
   final DateTime openTime;
   final DateTime closeTime;
 
-  VendorRegisterParam({
+  ShopRegisterUpdateRequest({
     required this.name,
     required this.address,
     required this.provinceName,
@@ -35,8 +35,8 @@ class VendorRegisterParam {
     required this.closeTime,
   });
 
-  factory VendorRegisterParam.fromShop(ShopEntity shop) {
-    return VendorRegisterParam(
+  factory ShopRegisterUpdateRequest.fromShop(ShopEntity shop) {
+    return ShopRegisterUpdateRequest(
       name: shop.name,
       address: shop.address,
       provinceName: shop.provinceName,
@@ -53,7 +53,7 @@ class VendorRegisterParam {
     );
   }
 
-  VendorRegisterParam copyWith({
+  ShopRegisterUpdateRequest copyWith({
     String? name,
     String? address,
     String? provinceName,
@@ -68,7 +68,7 @@ class VendorRegisterParam {
     DateTime? openTime,
     DateTime? closeTime,
   }) {
-    return VendorRegisterParam(
+    return ShopRegisterUpdateRequest(
       name: name ?? this.name,
       address: address ?? this.address,
       provinceName: provinceName ?? this.provinceName,
@@ -133,7 +133,7 @@ class VendorRegisterParam {
   }
 
   @override
-  bool operator ==(covariant VendorRegisterParam other) {
+  bool operator ==(covariant ShopRegisterUpdateRequest other) {
     if (identical(this, other)) return true;
 
     return other.name == name &&

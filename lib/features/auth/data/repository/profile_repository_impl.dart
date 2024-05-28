@@ -1,5 +1,5 @@
 import 'package:vendor/features/auth/data/datasources/profile_data_source.dart';
-import 'package:vendor/features/auth/domain/entities/vendor_register_param.dart';
+import 'package:vendor/features/auth/domain/entities/request/vendor_register_update_request.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/shop.dart';
 
@@ -16,12 +16,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  FRespData<ShopEntity> registerVendor(VendorRegisterParam param) async {
+  FRespData<ShopEntity> registerVendor(ShopRegisterUpdateRequest param) async {
     return handleDataResponseFromDataSource(dataCallback: () => _shopDataSource.registerVendor(param));
   }
 
   @override
-  FRespData<ShopEntity> updateProfile(VendorRegisterParam param) {
+  FRespData<ShopEntity> updateProfile(ShopRegisterUpdateRequest param) {
     return handleDataResponseFromDataSource(dataCallback: () => _shopDataSource.updateProfile(param));
   }
 }

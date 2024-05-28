@@ -38,7 +38,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
 
                 return resultEither.fold(
                   (error) => MessageScreen.error(error.message),
-                  (ok) => ShopInfoDetailView(shopId: ok.data!.shopId),
+                  (ok) => VendorShopInfoView(shopId: ok.data!.shopId),
                 );
               } else if (snapshot.hasError) {
                 return MessageScreen.error(snapshot.error.toString());

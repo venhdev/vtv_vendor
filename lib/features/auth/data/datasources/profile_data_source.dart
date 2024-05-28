@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:vendor/core/constants/vendor_api.dart';
-import 'package:vendor/features/auth/domain/entities/vendor_register_param.dart';
+import 'package:vendor/features/auth/domain/entities/request/vendor_register_update_request.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/shop.dart';
 
@@ -9,12 +9,12 @@ abstract class ProfileDataSource {
 // PUT
 // /api/vendor/shop/update
 // const String kAPIVendorShopUpdateURL = '/vendor/shop/update';
-  Future<SuccessResponse<ShopEntity>> updateProfile(VendorRegisterParam param);
+  Future<SuccessResponse<ShopEntity>> updateProfile(ShopRegisterUpdateRequest param);
 
 // POST
 // /api/vendor/register
 // const String kAPIVendorRegisterURL = '/vendor/register';
-  Future<SuccessResponse<ShopEntity>> registerVendor(VendorRegisterParam param);
+  Future<SuccessResponse<ShopEntity>> registerVendor(ShopRegisterUpdateRequest param);
 
 // PATCH
 // /api/vendor/shop/update/status/{status}
@@ -45,7 +45,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   }
 
   @override
-  Future<SuccessResponse<ShopEntity>> registerVendor(VendorRegisterParam param) async {
+  Future<SuccessResponse<ShopEntity>> registerVendor(ShopRegisterUpdateRequest param) async {
     final url = uriBuilder(path: kAPIVendorRegisterURL);
 
     final formData = FormData.fromMap(await param.toMap());
@@ -66,7 +66,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   }
 
   @override
-  Future<SuccessResponse<ShopEntity>> updateProfile(VendorRegisterParam param) async {
+  Future<SuccessResponse<ShopEntity>> updateProfile(ShopRegisterUpdateRequest param) async {
     final url = uriBuilder(path: kAPIVendorShopUpdateURL);
 
     final formData = FormData.fromMap(await param.toMap());
