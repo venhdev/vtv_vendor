@@ -44,3 +44,7 @@ app.*.map.json
 
 PRIVATE.txt
 ref.txt
+
+# Sensitivity related
+/.env
+firebase_options.dart
