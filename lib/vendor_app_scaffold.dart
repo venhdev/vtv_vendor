@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vendor/core/constants/global_variables.dart';
 import 'package:vendor/features/notification/presentation/pages/vendor_notification_page.dart';
 import 'package:vendor/features/wallet/presentation/pages/vendor_wallet_history_page.dart';
 import 'package:vtv_common/auth.dart';
@@ -19,10 +20,11 @@ class VendorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      navigatorKey: GlobalVariables.navigatorState,
       debugShowCheckedModeBanner: false,
       title: 'VTV Vendor',
-      home: AppScaffold(),
+      home: const AppScaffold(),
     );
   }
 }

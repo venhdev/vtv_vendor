@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:vendor/features/order/domain/repository/vendor_order_repository.dart';
 import 'package:vtv_common/core.dart';
@@ -5,6 +6,7 @@ import 'package:vtv_common/order.dart';
 
 import '../../features/order/presentation/pages/vendor_order_detail_page.dart';
 import '../../service_locator.dart';
+import '../constants/global_variables.dart';
 
 class VendorHandler {
   //! Order
@@ -76,6 +78,15 @@ class VendorHandler {
       );
     } else {
       return null;
+    }
+  }
+
+  static Future<OrderDetailEntity?> navigateToOrderDetailPageViaRemoteMessage(RemoteMessage? remoteMessage) async {
+    if (remoteMessage?.notification?.body == null || GlobalVariables.navigatorState.currentContext == null) return null;
+
+    final uuid = ConversionUtils.extractUUID(remoteMessage!.notification!.body!);
+    if (uuid != null) {
+      navigateToOrderDetailPage(GlobalVariables.navigatorState.currentContext!, orderId: uuid);
     }
   }
 }
