@@ -6,12 +6,14 @@ import 'package:vendor/features/wallet/presentation/pages/vendor_wallet_history_
 import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 
+import 'core/handler/vendor_handler.dart';
 import 'features/auth/presentation/pages/no_permission_page.dart';
 import 'features/auth/presentation/pages/vendor_login_page.dart';
 import 'features/chat/presentation/pages/vendor_chat_room_page.dart';
 import 'features/revenue/presentation/pages/revenue_page.dart';
 import 'features/voucher/presentation/pages/add_update_voucher_page.dart';
 import 'features/voucher/presentation/pages/vendor_voucher_manage_page.dart';
+import 'service_locator.dart';
 import 'vendor_drawer.dart';
 import 'vendor_home_page.dart';
 
@@ -20,6 +22,14 @@ class VendorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      sl<FirebaseCloudMessagingManager>().runWhenContainInitialMessage(
+        (remoteMessage) {
+          VendorHandler.navigateToOrderDetailPageViaRemoteMessage(remoteMessage);
+        },
+      );
+    });
+
     return MaterialApp(
       navigatorKey: GlobalVariables.navigatorState,
       debugShowCheckedModeBanner: false,

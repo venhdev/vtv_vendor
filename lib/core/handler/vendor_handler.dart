@@ -86,7 +86,8 @@ class VendorHandler {
 
     final uuid = ConversionUtils.extractUUID(remoteMessage!.notification!.body!);
     if (uuid != null) {
-      navigateToOrderDetailPage(GlobalVariables.navigatorState.currentContext!, orderId: uuid);
+      return navigateToOrderDetailPage(GlobalVariables.navigatorState.currentContext!, orderId: uuid);
     }
+    return null;
   }
 }
