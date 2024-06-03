@@ -130,15 +130,15 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                 ButtonTheme(
                   alignedDropdown: true,
                   child: DropdownButtonFormField<String>(
-                    value: _voucher.type == VoucherTypes.MONEY_SHOP ? 'money' : 'percent',
+                    value: _voucher.type == VoucherType.MONEY_SHOP ? 'money' : 'percent',
                     borderRadius: BorderRadius.circular(8.0),
                     onChanged: (value) {
                       setState(() {
                         // _voucher = _voucher.copyWith(type: VoucherTypes.values.byName(value!));
                         if (value == 'percent') {
-                          _voucher = _voucher.copyWith(type: VoucherTypes.PERCENTAGE_SHOP, discount: 10);
+                          _voucher = _voucher.copyWith(type: VoucherType.PERCENTAGE_SHOP, discount: 10);
                         } else {
-                          _voucher = _voucher.copyWith(type: VoucherTypes.MONEY_SHOP, discount: 1000);
+                          _voucher = _voucher.copyWith(type: VoucherType.MONEY_SHOP, discount: 1000);
                         }
                       });
                     },
@@ -168,7 +168,7 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                 OutlineTextField(
                   inputFormatters: [DecimalFormatter()],
                   controller: _discountController,
-                  prefixText: _voucher.type == VoucherTypes.MONEY_SHOP ? '₫ ' : '% ',
+                  prefixText: _voucher.type == VoucherType.MONEY_SHOP ? '₫ ' : '% ',
                   label: 'Giảm giá',
                   keyboardType: TextInputType.number,
                   validator: (value) {
@@ -182,11 +182,11 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                       return 'Giảm giá phải là số';
                     } else if (int.tryParse(value)! <= 0) {
                       return 'Giảm giá phải lớn hơn 0';
-                    } else if (_voucher.type == VoucherTypes.PERCENTAGE_SHOP) {
+                    } else if (_voucher.type == VoucherType.PERCENTAGE_SHOP) {
                       if (int.parse(value) > 100) {
                         return 'Giảm giá phải nhỏ hơn 100%';
                       }
-                    } else if (_voucher.type == VoucherTypes.MONEY_SHOP && int.tryParse(value)! < 1000) {
+                    } else if (_voucher.type == VoucherType.MONEY_SHOP && int.tryParse(value)! < 1000) {
                       return 'Giá trị phải lớn hơn 1.000đ';
                     }
                     return null;
@@ -251,7 +251,7 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                                 showOverdueTime: true,
                                 prefixRemaining: 'Bắt đầu sau: ',
                               ),
-                              style: VTVTheme.hintTextStyle,
+                              style: VTVTheme.hintText12,
                             ),
                             // Text('_voucher.startDate: ${_voucher.startDate}'),
                             // Text('_voucher.startDate isUtc: ${_voucher.startDate.isUtc}'),
@@ -281,7 +281,7 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
                                 pattern: 'dd/MM/yyyy hh:mm:aa')),
                             Text(
                               DateTimeUtils.getRemainingTime(_voucher.endDate, showOverdueTime: true),
-                              style: VTVTheme.hintTextStyle,
+                              style: VTVTheme.hintText12,
                             )
                           ],
                         ),

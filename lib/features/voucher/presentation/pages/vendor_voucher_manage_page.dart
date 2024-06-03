@@ -17,16 +17,16 @@ List<Status> _statusList = [
   Status.DELETED,
 ];
 
-List<VoucherTypes> _voucherTypeList = [
-  VoucherTypes.MONEY_SHOP,
-  VoucherTypes.PERCENTAGE_SHOP,
+List<VoucherType> _voucherTypeList = [
+  VoucherType.MONEY_SHOP,
+  VoucherType.PERCENTAGE_SHOP,
 ];
 
-String _typeName(VoucherTypes type) {
+String _typeName(VoucherType type) {
   switch (type) {
-    case VoucherTypes.MONEY_SHOP:
+    case VoucherType.MONEY_SHOP:
       return 'Giảm theo tiền';
-    case VoucherTypes.PERCENTAGE_SHOP:
+    case VoucherType.PERCENTAGE_SHOP:
       return 'Giảm theo phần trăm';
     default:
       return 'Unknown type';
@@ -55,13 +55,13 @@ class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
   bool filterByStatus = true;
 
   late Status _selectedStatus;
-  late VoucherTypes _selectedType;
+  late VoucherType _selectedType;
 
   @override
   void initState() {
     super.initState();
     _selectedStatus = Status.ACTIVE;
-    _selectedType = VoucherTypes.MONEY_SHOP;
+    _selectedType = VoucherType.MONEY_SHOP;
   }
 
   @override

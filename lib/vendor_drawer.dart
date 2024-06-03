@@ -124,10 +124,8 @@ class _VendorDrawerState extends State<VendorDrawer> {
                   );
                   if (isConfirm) {
                     if (context.mounted) {
-                      await context
-                          .read<AuthCubit>()
-                          .logout(state.auth!.refreshToken)
-                          .then((value) => Navigator.pop(context));
+                      context.read<AuthCubit>().logout(state.auth!.refreshToken);
+                      Navigator.pop(context);
                     }
                   }
                 },

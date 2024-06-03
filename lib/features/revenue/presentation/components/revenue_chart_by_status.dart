@@ -42,7 +42,7 @@ class RevenueChartByStatus extends StatelessWidget {
               (error) => MessageScreen.error(error.message),
               (ok) {
                 if (ok.data!.totalMoney == 0 && ok.data!.totalOrder == 0) {
-                  return MessageScreen(message: 'Chưa có dữ liệu thống kê', textStyle: VTVTheme.hintTextStyle);
+                  return MessageScreen(message: 'Chưa có dữ liệu thống kê', textStyle: VTVTheme.hintText12);
                 }
 
                 return RevenueByStatusLineChart(data: ok.data!);

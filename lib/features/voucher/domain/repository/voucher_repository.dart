@@ -14,7 +14,7 @@ abstract class VoucherRepository {
   // const String kAPIVoucherGetAllURL = '/vendor/shop/voucher/get-all-shop';
   FRespData<List<VoucherEntity>> getAllVoucher();
   // const String kAPIVoucherGetAllByTypeURL = '/vendor/shop/voucher/get-all-shop-type';
-  FRespData<List<VoucherEntity>> getAllVoucherByType(VoucherTypes type);
+  FRespData<List<VoucherEntity>> getAllVoucherByType(VoucherType type);
   // const String kAPIVoucherGetAllByStatusURL = '/vendor/shop/voucher/get-all-shop-status';
   FRespData<List<VoucherEntity>> getAllVoucherByStatus(Status status);
   // const String kAPIVoucherDetailURL = '/vendor/shop/voucher/detail/:voucherId'; // {voucherId}
@@ -42,7 +42,7 @@ class VoucherRepositoryImpl implements VoucherRepository {
   }
 
   @override
-  FRespData<List<VoucherEntity>> getAllVoucherByType(VoucherTypes type) async {
+  FRespData<List<VoucherEntity>> getAllVoucherByType(VoucherType type) async {
     return handleDataResponseFromDataSource(dataCallback: () => _voucherDataSource.getAllVoucherByType(type));
   }
 

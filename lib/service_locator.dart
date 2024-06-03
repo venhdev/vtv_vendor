@@ -14,6 +14,7 @@ import 'package:vtv_common/core.dart';
 import 'package:vtv_common/guest.dart';
 
 import 'config/dio/vendor_auth_interceptor.dart';
+import 'core/handler/vendor_redirect.dart';
 import 'features/notification/data/datasources/vendor_notification_data_source.dart';
 import 'features/notification/data/repository/vendor_notification_repository_impl.dart';
 import 'features/notification/domain/repository/vendor_notification_repository.dart';
@@ -105,7 +106,13 @@ Future<void> initializeLocator() async {
   sl.registerLazySingleton<CheckTokenUC>(() => CheckTokenUC(sl()));
 
   //! Bloc
-  sl.registerFactory(() => AuthCubit(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => AuthCubit(
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        VendorRedirect(redirect: {}),
+      ));
 }
 
 // <https://pub.dev/packages/get_it>

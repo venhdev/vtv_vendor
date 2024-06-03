@@ -9,6 +9,7 @@ import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/dev.dart';
 
+import 'core/constants/global_variables.dart';
 import 'core/handler/vendor_handler.dart';
 import 'vendor_app_scaffold.dart';
 
@@ -21,16 +22,22 @@ void main() async {
 
   // get singleton instance from service locator
   final localNotificationHelper = sl<LocalNotificationHelper>();
-  final authCubit = sl<AuthCubit>()..onStarted();
+  final authCubit = sl<AuthCubit>();
+  await authCubit.onStarted();
 
   sl<FirebaseCloudMessagingManager>().requestPermission();
   sl<FirebaseCloudMessagingManager>().listen(
     onForegroundMessageReceived: (remoteMessage) {
       if (remoteMessage == null) return;
+
+      //> should show new chat notification
+      if (remoteMessage.type == NotificationType.NEW_MESSAGE.name &&
+          GlobalVariables.currentChatRoomId == remoteMessage.data['roomChatId']) return;
+
       localNotificationHelper.showRemoteMessageNotification(remoteMessage);
     },
     onTapMessageOpenedApp: (remoteMessage) {
-      VendorHandler.navigateToOrderDetailPageViaRemoteMessage(remoteMessage);
+      if (remoteMessage != null) VendorHandler.processOpenRemoteMessage(remoteMessage);
     },
   );
 
@@ -39,7 +46,7 @@ void main() async {
     //TODO server not contain notificationId >> cannot handle mark as read
     if (notification.payload == null) return;
     final RemoteMessage remoteMessage = RemoteMessageSerialization.fromJson(notification.payload!);
-    VendorHandler.navigateToOrderDetailPageViaRemoteMessage(remoteMessage);
+    VendorHandler.processOpenRemoteMessage(remoteMessage);
   });
 
   // NOTE: dev

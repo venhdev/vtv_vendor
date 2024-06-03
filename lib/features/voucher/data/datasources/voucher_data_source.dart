@@ -15,7 +15,7 @@ abstract class VoucherDataSource {
   // const String kAPIVoucherGetAllURL = '/vendor/shop/voucher/get-all-shop';
   Future<SuccessResponse<List<VoucherEntity>>> getAllVoucher();
   // const String kAPIVoucherGetAllByTypeURL = '/vendor/shop/voucher/get-all-shop-type';
-  Future<SuccessResponse<List<VoucherEntity>>> getAllVoucherByType(VoucherTypes type);
+  Future<SuccessResponse<List<VoucherEntity>>> getAllVoucherByType(VoucherType type);
   // const String kAPIVoucherGetAllByStatusURL = '/vendor/shop/voucher/get-all-shop-status';
   Future<SuccessResponse<List<VoucherEntity>>> getAllVoucherByStatus(Status status);
   // const String kAPIVoucherDetailURL = '/vendor/shop/voucher/detail/:voucherId'; // {voucherId}
@@ -73,7 +73,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
   }
 
   @override
-  Future<SuccessResponse<List<VoucherEntity>>> getAllVoucherByType(VoucherTypes type) async {
+  Future<SuccessResponse<List<VoucherEntity>>> getAllVoucherByType(VoucherType type) async {
     final url = uriBuilder(
       path: kAPIVoucherGetAllByTypeURL,
       queryParameters: {'type': type.name},

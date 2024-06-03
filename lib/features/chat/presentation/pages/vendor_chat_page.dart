@@ -5,21 +5,38 @@ import 'package:vtv_common/chat.dart';
 import 'package:vtv_common/core.dart';
 
 import '../../../../../service_locator.dart';
+import '../../../../core/constants/global_variables.dart';
 
-class VendorChatPage extends StatelessWidget {
+class VendorChatPage extends StatefulWidget {
   const VendorChatPage({super.key, required this.room});
 
   final ChatRoomEntity room;
 
-  // static String routeName = 'chat';
-  // static String routePath = 'chat';
-  // static String path = '/user/chat-room/chat';
+  static String routeName = 'chat';
+
+  @override
+  State<VendorChatPage> createState() => _VendorChatPageState();
+}
+
+class _VendorChatPageState extends State<VendorChatPage> {
+  @override
+  void initState() {
+    super.initState();
+    GlobalVariables.currentChatRoomId = widget.room.roomChatId;
+  }
+
+  @override
+  void dispose() {
+    GlobalVariables.currentChatRoomId = null;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final lazyListController = LazyListController<MessageEntity>(
       items: [],
-      paginatedData: (page, size) => sl<ChatRepository>().getPageChatMessageByRoomId(page, size, room.roomChatId),
+      paginatedData: (page, size) =>
+          sl<ChatRepository>().getPaginatedChatMessageByRoomId(page, size, widget.room.roomChatId),
       itemBuilder: (context, index, data) => ChatItem(chat: data),
       useGrid: false,
       auto: true,
@@ -31,14 +48,14 @@ class VendorChatPage extends StatelessWidget {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         if (state.status == AuthStatus.authenticated) {
-          final recipient = room.getRecipientForChat(state.auth!.userInfo.username!);
+          final recipient = widget.room.getRecipientForChat(state.auth!.userInfo.username!);
 
           return Scaffold(
             appBar: AppBar(
               title: Text(recipient),
             ),
             body: ChatPage(
-              roomChatId: room.roomChatId,
+              roomChatId: widget.room.roomChatId,
               receiverUsername: recipient,
               lazyListController: lazyListController,
             ),

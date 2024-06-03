@@ -46,16 +46,16 @@ class VendorVoucherItem extends StatelessWidget {
                 Column(
                   children: [
                     Icon(
-                      voucher.type == VoucherTypes.MONEY_SHOP ? Icons.money : Icons.percent_rounded,
-                      color: voucher.type == VoucherTypes.MONEY_SHOP ? Colors.green : Colors.blue,
+                      voucher.type == VoucherType.MONEY_SHOP ? Icons.money : Icons.percent_rounded,
+                      color: voucher.type == VoucherType.MONEY_SHOP ? Colors.green : Colors.blue,
                     ),
                     Text.rich(
                       textAlign: TextAlign.center,
                       TextSpan(
-                        text: voucher.type == VoucherTypes.MONEY_SHOP ? 'Giảm tiền\n' : 'Phần trăm\n',
+                        text: voucher.type == VoucherType.MONEY_SHOP ? 'Giảm tiền\n' : 'Phần trăm\n',
                         children: [
                           TextSpan(
-                            text: voucher.type == VoucherTypes.MONEY_SHOP
+                            text: voucher.type == VoucherType.MONEY_SHOP
                                 ? ConversionUtils.formatCurrency(voucher.discount)
                                 : '${voucher.discount}%',
                           ),
@@ -92,7 +92,7 @@ class VendorVoucherItem extends StatelessWidget {
                       children: [
                         if (voucher.status == Status.ACTIVE && DateTime.now().isBefore(voucher.endDate))
                           TextSpan(
-                            style: VTVTheme.hintTextStyle,
+                            style: VTVTheme.hintText12,
                             text: '(${DateTimeUtils.getRemainingTime(
                               showOverdueTime: true,
                               voucher.startDate,
@@ -112,7 +112,7 @@ class VendorVoucherItem extends StatelessWidget {
                       children: [
                         if (voucher.status == Status.ACTIVE)
                           TextSpan(
-                            style: VTVTheme.hintTextStyle,
+                            style: VTVTheme.hintText12,
                             text: '(${DateTimeUtils.getRemainingTime(
                               showOverdueTime: true,
                               voucher.endDate,
@@ -135,7 +135,7 @@ class VendorVoucherItem extends StatelessWidget {
             ),
             Text(
               '${voucher.quantityUsed!}/${voucher.quantity} - Đã dùng ${(voucher.quantityUsed! / voucher.quantity * 100).toInt()}%',
-              style: VTVTheme.hintTextMediumStyle,
+              style: VTVTheme.hintText13,
               textAlign: TextAlign.end,
             ),
 
@@ -154,7 +154,7 @@ class VendorVoucherItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     voucher.code,
-                    style: VTVTheme.hintTextStyle,
+                    style: VTVTheme.hintText12,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

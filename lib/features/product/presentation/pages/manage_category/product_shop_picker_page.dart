@@ -30,7 +30,7 @@ class _ProductShopPickerPageState extends State<ProductShopPickerPage> {
       size: 200, //! load all products once
     )..init(
         // filter data to exclude products
-        () {
+        onInitCompleted: () {
           final excludeProductIds = widget.excludeProductIds;
           if (excludeProductIds != null && excludeProductIds.isNotEmpty) {
             lazyListController.items.removeWhere((element) => excludeProductIds.contains(element.productId));
@@ -54,7 +54,7 @@ class _ProductShopPickerPageState extends State<ProductShopPickerPage> {
         ],
       ),
       body: LazyListBuilder(
-        lazyController: lazyListController,
+        lazyListController: lazyListController,
         itemBuilder: (context, index, data) => item(data),
       ),
     );

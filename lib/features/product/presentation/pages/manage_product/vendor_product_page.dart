@@ -116,7 +116,7 @@ class _TabViewByStatusState extends State<TabViewByStatus> {
         lazyController.refresh();
       },
       child: LazyListBuilder<ProductEntity>(
-        lazyController: lazyController,
+        lazyListController: lazyController,
         itemBuilder: (context, index, data) => VendorProductItem(
           product: data,
           onHidePressed: () async {

@@ -1,9 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vendor/features/order/domain/repository/vendor_order_repository.dart';
+import 'package:vtv_common/auth.dart';
+import 'package:vtv_common/chat.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/order.dart';
 
+import '../../features/chat/presentation/pages/vendor_chat_page.dart';
 import '../../features/order/presentation/pages/vendor_order_detail_page.dart';
 import '../../service_locator.dart';
 import '../constants/global_variables.dart';
@@ -45,6 +49,58 @@ class VendorHandler {
         reloadCallback();
       });
     });
+  }
+
+  //# Open Message (Notification)
+  /// Call this function on first screen
+  static void openMessageOnTerminatedApp() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      sl<FirebaseCloudMessagingManager>().runWhenContainInitialMessage(
+        (remoteMessage) => processOpenRemoteMessage(remoteMessage),
+      );
+    });
+  }
+
+  static void processOpenRemoteMessage(RemoteMessage remoteMessage) {
+    final currentUsername = GlobalVariables.navigatorState.currentContext?.read<AuthCubit>().state.currentUsername;
+    if (currentUsername == null) return;
+
+    if (remoteMessage.type == NotificationType.NEW_MESSAGE.name) {
+      VendorHandler.navigateToChatPage(
+        GlobalVariables.navigatorState.currentContext!,
+        recipientUsername: currentUsername == remoteMessage.data['sender']
+            ? remoteMessage.data['recipient'] // first message sent by vendor
+            : remoteMessage.data['sender'], // first message sent by customer
+      );
+    } else if (remoteMessage.type == NotificationType.ORDER.name) {
+      VendorHandler.navigateToOrderDetailPageViaRemoteMessage(remoteMessage);
+    } else {
+      VendorHandler.navigateToOrderDetailPageViaRemoteMessage(remoteMessage);
+    }
+  }
+
+  //# Redirect
+  static Future<void> navigateToChatPage(BuildContext context, {required String recipientUsername}) async {
+    final room = await showDialogToPerform(
+      context,
+      dataCallback: () async {
+        return await sl<ChatRepository>().getOrCreateChatRoom(recipientUsername).then((respEither) {
+          return respEither.fold(
+            (error) => null,
+            (ok) => ok.data!,
+          );
+        });
+      },
+      closeBy: (context, result) => Navigator.of(context).pop(result),
+    );
+
+    if (room != null && context.mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => VendorChatPage(room: room),
+        ),
+      );
+    }
   }
 
   static Future<OrderDetailEntity?> navigateToOrderDetailPage(
