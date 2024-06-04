@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:vtv_common/auth.dart';
 import 'package:vtv_common/core.dart';
 import 'package:vtv_common/dev.dart';
 
+import 'app_state.dart';
 import 'core/constants/global_variables.dart';
 import 'core/handler/vendor_handler.dart';
 import 'vendor_app_scaffold.dart';
@@ -61,9 +63,12 @@ void main() async {
     }
   }
 
+  final appState = AppState(sl<Connectivity>())..init();
+
   runApp(MultiProvider(
     providers: [
-      BlocProvider(create: (context) => authCubit),
+      ChangeNotifierProvider(create: (_) => appState),
+      BlocProvider(create: (_) => authCubit),
     ],
     child: const VendorApp(),
   ));
