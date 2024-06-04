@@ -201,7 +201,7 @@ class _AppScaffoldState extends State<AppScaffold> {
                   return NoAccessPermissionPage(refreshToken: state.auth!.refreshToken);
                 } else {
                   return OverlayPortal(
-                    overlayChildBuilder: (_) => const NoConnectionOverlay(),
+                    overlayChildBuilder: (_) => const NoConnectionOverlay(imagePath: 'assets/images/loading.gif'),
                     controller: appState.overlayController,
                     child: _widgetOptions[_selectedIndex],
                   );
@@ -225,28 +225,4 @@ class _AppScaffoldState extends State<AppScaffold> {
   }
 }
 
-class NoConnectionOverlay extends StatelessWidget {
-  const NoConnectionOverlay({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.withOpacity(0.4),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          height: 150,
-          width: 200,
-          decoration: BoxDecoration(
-            color: Colors.red.shade50,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Stack(alignment: Alignment.center, children: [
-            Center(child: Image.asset('assets/images/loading.gif', height: 50, width: 50)),
-            const Positioned(bottom: 0, child: Text('Không có kết nối', textAlign: TextAlign.center)),
-          ]),
-        ),
-      ),
-    );
-  }
-}
