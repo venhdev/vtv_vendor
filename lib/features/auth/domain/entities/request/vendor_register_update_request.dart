@@ -16,8 +16,10 @@ class ShopRegisterUpdateRequest {
   final String avatar;
   final bool changeAvatar;
   final String description;
-  final DateTime openTime;
-  final DateTime closeTime;
+  // final DateTime openTime;
+  final String openTime;
+  // final DateTime closeTime;
+  final String closeTime;
 
   ShopRegisterUpdateRequest({
     required this.name,
@@ -65,8 +67,8 @@ class ShopRegisterUpdateRequest {
     String? avatar,
     bool? changeAvatar,
     String? description,
-    DateTime? openTime,
-    DateTime? closeTime,
+    String? openTime,
+    String? closeTime,
   }) {
     return ShopRegisterUpdateRequest(
       name: name ?? this.name,
@@ -99,8 +101,8 @@ class ShopRegisterUpdateRequest {
       if (changeAvatar) 'avatar': await FileUtils.getMultiPartFileViaPath(avatar),
       'changeAvatar': changeAvatar,
       'description': description,
-      'openTime': openTime.toIso8601String(),
-      'closeTime': closeTime.toIso8601String(),
+      'openTime': openTime,
+      'closeTime': closeTime,
     };
   }
 

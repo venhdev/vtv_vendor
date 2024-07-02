@@ -83,7 +83,7 @@ Future<RespData<OrderDetailEntity>?> _handleAcceptOrder(BuildContext context, St
     context: context,
     title: 'Xác nhận đơn hàng?',
     titleTextStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-    content: 'Sau khi xác nhận, đơn hàng sẽ được chuyển sang trạng thái "Đang đóng gói"',
+    content: 'Sau khi xác nhận, đơn hàng sẽ được chuyển sang trạng thái "Đang xử lý"',
     confirmText: 'Xác nhận',
     confirmBackgroundColor: Colors.green.shade300,
     dismissText: 'Thoát',

@@ -12,7 +12,7 @@ import '../../domain/entities/request/vendor_register_update_request.dart';
 import '../../domain/repository/profile_repository.dart';
 
 //TODO:
-// 1. still can change phone....
+// 1. still can change phone...
 
 class VendorRegisterUpdatePage extends StatefulWidget {
   const VendorRegisterUpdatePage({super.key, this.isUpdate = false, this.initParam});
@@ -35,8 +35,8 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
   final _descriptionController = TextEditingController();
   String? _avatarPath;
   bool changeAvatar = false;
-  DateTime? _openTime;
-  DateTime? _closeTime;
+  String? _openTime; //server store as string :)
+  String? _closeTime;
 
   // final _addressController = TextEditingController();
   String _wardName = '';
@@ -52,6 +52,8 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         _districtName.isNotEmpty &&
         _wardName.isNotEmpty &&
         _address.isNotEmpty &&
+        _openTime != null &&
+        _closeTime != null &&
         (_avatarPath != null || (!changeAvatar && widget.isUpdate))) {
       final ShopRegisterUpdateRequest param = ShopRegisterUpdateRequest(
         name: _nameController.text,
@@ -62,6 +64,8 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         description: _descriptionController.text,
         openTime: _openTime!,
         closeTime: _closeTime!,
+        // openTime: ConversionUtils.convertDateTimeToString(_openTime!),
+        // closeTime: ConversionUtils.convertDateTimeToString(_closeTime!),
         address: _address,
         wardName: _wardName,
         districtName: _districtName,
@@ -96,6 +100,8 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         _districtName.isNotEmpty &&
         _wardName.isNotEmpty &&
         _address.isNotEmpty &&
+        _openTime != null &&
+        _closeTime != null &&
         (_avatarPath != null || (!changeAvatar && widget.isUpdate))) {
       final ShopRegisterUpdateRequest param = ShopRegisterUpdateRequest(
         name: _nameController.text,
@@ -106,6 +112,8 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         description: _descriptionController.text,
         openTime: _openTime!,
         closeTime: _closeTime!,
+        // openTime: ConversionUtils.convertDateTimeToString(_openTime!),
+        // closeTime: ConversionUtils.convertDateTimeToString(_closeTime!),
         address: _address,
         wardName: _wardName,
         districtName: _districtName,
@@ -283,7 +291,8 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         Expanded(
           child: TextButton(
             child: Text(_openTime != null
-                ? 'Giờ mở cửa: ${ConversionUtils.convertDateTimeToString(_openTime!, pattern: 'hh:mm aa')}'
+                // ? 'Giờ mở cửa: ${ConversionUtils.convertDateTimeToString(_openTime!, pattern: 'hh:mm aa')}'
+                ? 'Giờ mở cửa: ${_openTime!}'
                 : 'Chọn giờ mở cửa'),
             onPressed: () async {
               final time = await showTimePicker(
@@ -293,13 +302,13 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
 
               if (time != null) {
                 setState(() {
-                  _openTime = DateTime(
+                  _openTime = ConversionUtils.convertDateTimeToString(DateTime(
                     DateTime.now().year,
                     DateTime.now().month,
                     DateTime.now().day,
                     time.hour,
                     time.minute,
-                  );
+                  ), pattern: 'hh:mm aa');
                 });
               }
             },
@@ -310,7 +319,8 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
         Expanded(
           child: TextButton(
             child: Text(_closeTime != null
-                ? 'Giờ đóng cửa: ${ConversionUtils.convertDateTimeToString(_closeTime!, pattern: 'hh:mm aa')}'
+                // ? 'Giờ đóng cửa: ${ConversionUtils.convertDateTimeToString(_closeTime!, pattern: 'hh:mm aa')}'
+                ? 'Giờ đóng cửa: ${_closeTime!}'
                 : 'Chọn giờ đóng cửa'),
             onPressed: () async {
               final time = await showTimePicker(
@@ -320,13 +330,13 @@ class _VendorRegisterUpdatePageState extends State<VendorRegisterUpdatePage> {
 
               if (time != null) {
                 setState(() {
-                  _closeTime = DateTime(
+                  _closeTime = ConversionUtils.convertDateTimeToString(DateTime(
                     DateTime.now().year,
                     DateTime.now().month,
                     DateTime.now().day,
                     time.hour,
                     time.minute,
-                  );
+                  ), pattern: 'hh:mm aa');
                 });
               }
             },
