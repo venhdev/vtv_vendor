@@ -9,7 +9,7 @@ import '../../../order/presentation/pages/vendor_order_purchase_page.dart';
 Future<List<RespData<MultiOrderEntity>>> _futureDataOrders() async {
   return Future.wait(
     List.generate(vendorTapPages.length, (index) async {
-      return sl<VendorOrderRepository>().getOrderListByStatus(vendorTapPages[index]);
+      return sl<VendorOrderRepository>().getListOrdersByStatus(vendorTapPages[index]);
     }),
   );
 }

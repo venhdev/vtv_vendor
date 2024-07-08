@@ -8,14 +8,15 @@ import '../../../../service_locator.dart';
 
 const List<OrderStatus> vendorTapPages = [
   // null,
-  OrderStatus.PENDING, // 0
-  OrderStatus.PROCESSING, // 1
-  OrderStatus.PICKUP_PENDING, // 2
-  OrderStatus.SHIPPING, // 3
-  OrderStatus.DELIVERED, // 4
-  OrderStatus.COMPLETED, // 5
-  OrderStatus.WAITING, // 6
-  OrderStatus.CANCEL, // 7
+  OrderStatus.PENDING,
+  OrderStatus.WAITING,
+  OrderStatus.PROCESSING,
+  OrderStatus.PICKUP_PENDING,
+  OrderStatus.SHIPPING,
+  OrderStatus.DELIVERED,
+  OrderStatus.COMPLETED,
+  OrderStatus.RETURNED,
+  OrderStatus.CANCEL,
 ];
 
 class VendorOrderPurchasePage extends StatefulWidget {
@@ -32,8 +33,11 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
   FRespData<MultiOrderEntity> _dataCallback(OrderStatus? status) async {
     if (status == null) {
       return sl<VendorOrderRepository>().getOrderList();
-    } else {
-      return sl<VendorOrderRepository>().getOrderListByStatus(status);
+    } else if (status == OrderStatus.RETURNED) {
+      return sl<VendorOrderRepository>().getListOrdersByMultiStatus([OrderStatus.RETURNED, OrderStatus.REFUNDED]);
+    }
+     else {
+      return sl<VendorOrderRepository>().getListOrdersByStatus(status);
     }
   }
 

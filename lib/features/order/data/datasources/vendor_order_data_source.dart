@@ -9,7 +9,7 @@ abstract class VendorOrderDataSource {
   Future<SuccessResponse<MultiOrderEntity>> getOrderList();
   Future<SuccessResponse<OrderDetailEntity>> updateOrderStatus(String orderId, OrderStatus status);
   Future<SuccessResponse<OrderDetailEntity>> getOrderDetail(String orderId);
-  Future<SuccessResponse<MultiOrderEntity>> getOrderListByStatus(OrderStatus status);
+  Future<SuccessResponse<MultiOrderEntity>> getListOrdersByStatus(OrderStatus status);
 
 }
 
@@ -32,7 +32,7 @@ class OrderVendorDataSourceImpl implements VendorOrderDataSource {
   }
 
   @override
-  Future<SuccessResponse<MultiOrderEntity>> getOrderListByStatus(OrderStatus status) async {
+  Future<SuccessResponse<MultiOrderEntity>> getListOrdersByStatus(OrderStatus status) async {
     final url = uriBuilder(path: '$kAPIVendorOrderListStatusURL/${status.name}');
 
     final response = await _dio.getUri(url);
