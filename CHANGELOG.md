@@ -4,13 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [1.0.2]
+## [1.0.2] - 08/07/2024
+
+- order purchase page add return
+
+## [1.0.0]
 
 - manage shop's product
 - register vendor with customer account
 - notification
 - manage voucher
-- order purchase page add return
 - other stuff...
 
 ## [v0.0.1-pre] - 20/01/2024
@@ -21,6 +24,6 @@ All notable changes to this project will be documented in this file.
   - Login, logout
   - View Shop Detail
 
-[unreleased]: https://github.com/venhha/flutter_vtv/compare/1.0.2...HEAD
-[1.0.2]: https://github.com/venhha/flutter_vtv/compare/v0.0.1-pre...1.0.2
-[v0.0.1-pre]: https://github.com/venhha/flutter_vtv/releases/tag/v0.0.1-pre
+[unreleased]: https://github.com/venhha/vtv_vendor/compare/1.0.2...HEAD
+[1.0.2]: https://github.com/venhha/vtv_vendor/compare/1.0.0...1.0.2
+[1.0.0]: https://github.com/venhha/vtv_vendor/releases/tag/1.0.0
