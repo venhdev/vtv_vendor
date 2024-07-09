@@ -106,7 +106,7 @@ class VoucherDataSourceImpl implements VoucherDataSource {
 
   @override
   Future<SuccessResponse<VoucherEntity>> updateVoucher(VoucherEntity voucher) async {
-    assert(voucher.status == Status.ACTIVE || voucher.status == Status.DELETED);
+    // assert(voucher.status == Status.ACTIVE || voucher.status == Status.DELETED);
 
     final url = uriBuilder(path: '$kAPIVoucherUpdateURL/${voucher.voucherId}');
 

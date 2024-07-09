@@ -58,10 +58,77 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
     prefixCode = '${username.length > 5 ? username.substring(0, 5).toUpperCase() : username.toUpperCase()}-';
   }
 
+  void handleAddOrUpdateVoucher() {
+    if (_voucher.startDate.isAfter(_voucher.endDate)) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Ngày bắt đầu phải trước ngày kết thúc'),
+          ),
+        );
+      return;
+    }
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (widget.voucher != null) {
+        //# update voucher
+
+        showLoading();
+        _voucher = _voucher.copyWith(
+          code: prefixCode + _voucher.code,
+        );
+
+        sl<VoucherRepository>().updateVoucher(_voucher).then((respEither) {
+          respEither.fold(
+            (error) {
+              Fluttertoast.showToast(msg: error.message ?? 'Xảy ra lỗi khi cập nhật voucher, vui lòng thử lại sau!');
+              // Navigator.pop(context, false);
+            },
+            (ok) {
+              Fluttertoast.showToast(msg: 'Cập nhật voucher thành công');
+              Navigator.pop(context, true); //> pop true to indicate that the operation is successful >> reload voucher
+            },
+          );
+          hideLoading();
+        });
+      } else {
+        //# add voucher
+        log(_voucher.toMap().toString());
+
+        showLoading();
+        _voucher = _voucher.copyWith(
+          code: prefixCode + _voucher.code,
+        );
+
+        sl<VoucherRepository>().addVoucher(_voucher).then((respEither) {
+          respEither.fold(
+            (error) {
+              Fluttertoast.showToast(msg: error.message ?? 'Xảy ra lỗi khi tạo voucher, vui lòng thử lại sau!');
+              // Navigator.pop(context, false);
+            },
+            (ok) {
+              Fluttertoast.showToast(msg: 'Tạo voucher thành công');
+              Navigator.pop(context, true); //> pop true to indicate that the operation is successful >> reload voucher
+            },
+          );
+        });
+        hideLoading();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () {
+            // pop with false value to indicate that the operation is canceled >> no load api
+            Navigator.pop(context, false);
+          },
+        ),
         title: Text(widget.voucher != null ? 'Cập nhật Voucher' : 'Thêm Voucher'),
       ),
       body: Padding(
@@ -303,67 +370,5 @@ class _AddUpdateVoucherPageState extends State<AddUpdateVoucherPage> {
         ),
       ),
     );
-  }
-
-  void handleAddOrUpdateVoucher() {
-    if (_voucher.startDate.isAfter(_voucher.endDate)) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(
-            content: Text('Ngày bắt đầu phải trước ngày kết thúc'),
-          ),
-        );
-      return;
-    }
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      if (widget.voucher != null) {
-        // update voucher
-
-        showLoading();
-        _voucher = _voucher.copyWith(
-          code: prefixCode + _voucher.code,
-        );
-        log('Cập nhật voucher: ${_voucher.toJson()}');
-
-        sl<VoucherRepository>().updateVoucher(_voucher).then((respEither) {
-          respEither.fold(
-            (error) {
-              Fluttertoast.showToast(msg: error.message ?? 'Xảy ra lỗi khi cập nhật voucher, vui lòng thử lại sau!');
-              // Navigator.pop(context, false);
-            },
-            (ok) {
-              Fluttertoast.showToast(msg: 'Cập nhật voucher thành công');
-              Navigator.pop(context, true);
-            },
-          );
-          hideLoading();
-        });
-      } else {
-        // add voucher
-        log('Thêm voucher');
-        log(_voucher.toMap().toString());
-
-        showLoading();
-        _voucher = _voucher.copyWith(
-          code: prefixCode + _voucher.code,
-        );
-
-        sl<VoucherRepository>().addVoucher(_voucher).then((respEither) {
-          respEither.fold(
-            (error) {
-              Fluttertoast.showToast(msg: error.message ?? 'Xảy ra lỗi khi tạo voucher, vui lòng thử lại sau!');
-              // Navigator.pop(context, false);
-            },
-            (ok) {
-              Fluttertoast.showToast(msg: 'Tạo voucher thành công');
-              Navigator.pop(context, true);
-            },
-          );
-        });
-        hideLoading();
-      }
-    }
   }
 }

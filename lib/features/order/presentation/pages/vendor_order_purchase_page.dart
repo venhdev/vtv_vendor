@@ -35,8 +35,7 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
       return sl<VendorOrderRepository>().getOrderList();
     } else if (status == OrderStatus.RETURNED) {
       return sl<VendorOrderRepository>().getListOrdersByMultiStatus([OrderStatus.RETURNED, OrderStatus.REFUNDED]);
-    }
-     else {
+    } else {
       return sl<VendorOrderRepository>().getListOrdersByStatus(status);
     }
   }
@@ -56,6 +55,52 @@ class _VendorOrderPurchasePageState extends State<VendorOrderPurchasePage> {
         tapPages: vendorTapPages,
         initialIndex: widget.initialIndex,
       ),
+      topBuilder: (index, multiOrder) {
+        // at pending page, has a button to quick accept all orders
+        if (index == 0) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: OrderPurchaseItemAction(
+              label: 'Xác nhận tất cả đơn hàng?',
+              buttonLabel: 'Xác nhận tất cả',
+              onPressed: () async {
+                final isConfirm = await showDialogToConfirm<bool>(
+                  context: context,
+                  title: 'Xác nhận tất cả đơn hàng?',
+                  confirmText: 'Xác nhận tất cả',
+                  content:
+                      'Toàn bộ ${multiOrder.orders.length} đơn hàng sẽ được xác nhận và chuyển sang trạng thái "Đang xử lý".',
+                );
+
+                if ((isConfirm ?? false) && context.mounted) {
+                  await showDialogToPerform(
+                    context,
+                    dataCallback: () async {
+                      final orderIds = multiOrder.orders.map((e) => e.orderId!).toList();
+
+                      await Future.wait(orderIds.map((orderId) async {
+                        await sl<VendorOrderRepository>().updateOrderStatus(orderId, OrderStatus.PROCESSING);
+                      }));
+                    },
+                    closeBy: (context, result) => Navigator.of(context).pop(result),
+                  );
+
+                  if (context.mounted) setState(() {});
+                }
+              },
+              // onPressed: () => VendorHandler.updateOrderStatus(
+              //   context,
+              //   order.orderId!,
+              //   OrderStatus.PROCESSING,
+              //   onRefresh,
+              // ),
+              backgroundColor: Colors.blue.shade100,
+              buttonColor: Colors.blue.shade200,
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 

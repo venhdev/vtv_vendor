@@ -7,22 +7,48 @@ import 'package:vtv_common/order.dart';
 import '../pages/add_update_voucher_page.dart';
 
 class VendorVoucherItem extends StatelessWidget {
-  const VendorVoucherItem({super.key, required this.voucher, required this.onDeleted});
+  const VendorVoucherItem({
+    super.key,
+    required this.voucher,
+    required this.onDeleted,
+    required this.refreshCallback,
+  });
 
   final VoucherEntity voucher;
   final Future<void> Function() onDeleted;
+
+  // control
+  final VoidCallback refreshCallback;
 
 //   final int? voucherId;
 //   final Status status;
 //   final String code;
   Future<void> editPressed(BuildContext context) async {
-    await Navigator.of(context).push(
+    final shouldReload = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
           return AddUpdateVoucherPage(voucher: voucher);
         },
       ),
     );
+
+    if (shouldReload == true) {
+      refreshCallback();
+    }
+  }
+
+  String _voucherStatusName() {
+    return (voucher.status == Status.ACTIVE)
+        ? voucher.startDate.isAfter(DateTime.now())
+            ? 'Đang hoạt động (Chưa bắt đầu)' // it's not started yet
+            : voucher.endDate.isBefore(DateTime.now())
+                ? 'Hết hạn' // it's expired
+                : 'Đang hoạt động (Đang diễn ra)' // it's active
+        : (voucher.status == Status.DELETED) // it's expired or disabled
+            ? 'Đã xóa'
+            : (voucher.status == Status.INACTIVE)
+                ? 'Không hoạt động'
+                : 'Unknown voucher status';
   }
 
   @override
@@ -41,50 +67,15 @@ class VendorVoucherItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             //# voucher info
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Icon(
-                      voucher.type == VoucherType.MONEY_SHOP ? Icons.money : Icons.percent_rounded,
-                      color: voucher.type == VoucherType.MONEY_SHOP ? Colors.green : Colors.blue,
-                    ),
-                    Text.rich(
-                      textAlign: TextAlign.center,
-                      TextSpan(
-                        text: voucher.type == VoucherType.MONEY_SHOP ? 'Giảm tiền\n' : 'Phần trăm\n',
-                        children: [
-                          TextSpan(
-                            text: voucher.type == VoucherType.MONEY_SHOP
-                                ? ConversionUtils.formatCurrency(voucher.discount)
-                                : '${voucher.discount}%',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: ListTile(
-                    title: Text(voucher.name, style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500)),
-                    subtitle: Text(voucher.description),
-                  ),
-                ),
-              ],
-            ),
+            voucherInfo(),
+
+            const Divider(),
+            Text('Trạng thái: ${_voucherStatusName()}'),
 
             //# start-end date
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text('voucher.startDate isUTC: ${voucher.startDate.isUtc} -> ${voucher.startDate.toIso8601String()}'),
-                // Text('UTC time: ${voucher.startDate.toUtc()}'),
-                // Text('Local Time: ${voucher.startDate.toLocal()}'),
-                // Text('now isUtc: ${DateTime.now().isUtc}'),
-                // Text('now: ${DateTime.now()} - utcNow: ${DateTime.now().toUtc()}\n\n\n.'),
-                // SelectableText('nowIso8601: ${DateTime.now().toIso8601String()}\nutcNow: ${DateTime.now().toUtc().toIso8601String()}\n\n\n.'),
-                // const Divider(),
-
                 Text.rich(
                   TextSpan(
                       text:
@@ -161,23 +152,60 @@ class VendorVoucherItem extends StatelessWidget {
                 ),
 
                 // edit TextButton.icon
-                TextButton.icon(
-                  onPressed: () => editPressed(context),
-                  icon: const Icon(Icons.edit),
-                  label: const Text('Sửa'),
-                ),
+                if (voucher.status == Status.ACTIVE && voucher.quantityUsed == 0) ...[
+                  TextButton.icon(
+                    onPressed: () => editPressed(context),
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Sửa'),
+                  ),
+                ],
 
-                // delete TextButton.icon
-                TextButton.icon(
-                  onPressed: onDeleted,
-                  icon: const Icon(Icons.delete),
-                  label: const Text('Xóa'),
-                ),
+                if (voucher.status != Status.DELETED) ...[
+                  TextButton.icon(
+                    onPressed: onDeleted,
+                    icon: const Icon(Icons.delete),
+                    label: const Text('Xóa'),
+                  ),
+                ]
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Row voucherInfo() {
+    return Row(
+      children: [
+        Column(
+          children: [
+            Icon(
+              voucher.type == VoucherType.MONEY_SHOP ? Icons.money : Icons.percent_rounded,
+              color: voucher.type == VoucherType.MONEY_SHOP ? Colors.green : Colors.blue,
+            ),
+            Text.rich(
+              textAlign: TextAlign.center,
+              TextSpan(
+                text: voucher.type == VoucherType.MONEY_SHOP ? 'Giảm tiền\n' : 'Phần trăm\n',
+                children: [
+                  TextSpan(
+                    text: voucher.type == VoucherType.MONEY_SHOP
+                        ? ConversionUtils.formatCurrency(voucher.discount)
+                        : '${voucher.discount}%',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: ListTile(
+            title: Text(voucher.name, style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500)),
+            subtitle: Text(voucher.description),
+          ),
+        ),
+      ],
     );
   }
 }

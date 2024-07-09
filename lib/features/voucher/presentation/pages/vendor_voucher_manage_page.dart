@@ -7,10 +7,20 @@ import '../../../../service_locator.dart';
 import '../../domain/repository/voucher_repository.dart';
 import '../components/vendor_voucher_item.dart';
 
-List<String> _filterList = [
-  'Trạng thái',
-  'Loại voucher',
-];
+String _filterVoucherName(FilterVoucher filter) {
+  switch (filter) {
+    case FilterVoucher.all:
+      return 'Tất cả';
+    case FilterVoucher.status:
+      return 'Trạng thái';
+    case FilterVoucher.type:
+      return 'Loại voucher';
+    default:
+      return 'Unknown filter';
+  }
+}
+
+enum FilterVoucher { all, status, type }
 
 List<Status> _statusList = [
   Status.ACTIVE,
@@ -52,7 +62,7 @@ class VendorVoucherManagePage extends StatefulWidget {
 }
 
 class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
-  bool filterByStatus = true;
+  FilterVoucher filterVoucher = FilterVoucher.all;
 
   late Status _selectedStatus;
   late VoucherType _selectedType;
@@ -74,21 +84,21 @@ class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             children: [
-              const Text('Lọc voucher: '),
+              const Text('Phân loại voucher:'),
               const Spacer(),
-              DropdownButton<bool>(
-                value: filterByStatus,
-                items: _filterList
+              DropdownButton<FilterVoucher>(
+                value: filterVoucher,
+                items: FilterVoucher.values
                     .map(
-                      (e) => DropdownMenuItem(
-                        value: e == _filterList[0],
-                        child: Text(e),
+                      (filterVoucher) => DropdownMenuItem(
+                        value: filterVoucher,
+                        child: Text(_filterVoucherName(filterVoucher)),
                       ),
                     )
                     .toList(),
                 onChanged: (value) {
                   setState(() {
-                    filterByStatus = value!;
+                    filterVoucher = value!;
                   });
                 },
               ),
@@ -97,34 +107,12 @@ class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
         ),
 
         Wrap(
-            spacing: 8,
-            children: filterByStatus
-                ? _statusList
-                    .map(
-                      (e) => ChoiceChip(
-                        label: Text(_statusName(e)),
-                        selected: _selectedStatus == e,
-                        onSelected: (value) {
-                          setState(() {
-                            _selectedStatus = e;
-                          });
-                        },
-                      ),
-                    )
-                    .toList()
-                : _voucherTypeList
-                    .map(
-                      (e) => ChoiceChip(
-                        label: Text(_typeName(e)),
-                        selected: _selectedType == e,
-                        onSelected: (value) {
-                          setState(() {
-                            _selectedType = e;
-                          });
-                        },
-                      ),
-                    )
-                    .toList()),
+          spacing: 8,
+          children: [
+            if (filterVoucher == FilterVoucher.status) ..._buildSelectableStatus(),
+            if (filterVoucher == FilterVoucher.type) ..._buildSelectableType(),
+          ],
+        ),
 
         //# voucher list
         Expanded(child: _buildBody()),
@@ -132,11 +120,54 @@ class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
     );
   }
 
+  List<ChoiceChip> _buildSelectableType() {
+    return _voucherTypeList
+        .map(
+          (e) => ChoiceChip(
+            label: Text(_typeName(e)),
+            selected: _selectedType == e,
+            onSelected: (value) {
+              setState(() {
+                _selectedType = e;
+              });
+            },
+          ),
+        )
+        .toList();
+  }
+
+  List<ChoiceChip> _buildSelectableStatus() {
+    return _statusList
+        .map(
+          (e) => ChoiceChip(
+            label: Text(_statusName(e)),
+            selected: _selectedStatus == e,
+            onSelected: (value) {
+              setState(() {
+                _selectedStatus = e;
+              });
+            },
+          ),
+        )
+        .toList();
+  }
+
+  FRespData<List<VoucherEntity>> callMethod(FilterVoucher filterVoucher) {
+    switch (filterVoucher) {
+      case FilterVoucher.all:
+        return sl<VoucherRepository>().getAllVoucher();
+      case FilterVoucher.status:
+        return sl<VoucherRepository>().getAllVoucherByStatus(_selectedStatus);
+      case FilterVoucher.type:
+        return sl<VoucherRepository>().getAllVoucherByType(_selectedType);
+      default:
+        return sl<VoucherRepository>().getAllVoucher();
+    }
+  }
+
   FutureBuilder<RespData<List<VoucherEntity>>> _buildBody() {
     return FutureBuilder(
-      future: filterByStatus
-          ? sl<VoucherRepository>().getAllVoucherByStatus(_selectedStatus)
-          : sl<VoucherRepository>().getAllVoucherByType(_selectedType),
+      future: callMethod(filterVoucher),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final respEither = snapshot.data!;
@@ -160,6 +191,7 @@ class _VendorVoucherManagePageState extends State<VendorVoucherManagePage> {
                   padding: const EdgeInsets.only(bottom: 72, top: 4, left: 4, right: 4),
                   itemCount: ok.data!.length,
                   itemBuilder: (context, index) => VendorVoucherItem(
+                    refreshCallback: () => setState(() {}),
                     voucher: ok.data![index],
                     onDeleted: () async {
                       final isConfirm = await showDialog<bool>(
