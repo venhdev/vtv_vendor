@@ -20,77 +20,91 @@ class VendorHomePage extends StatefulWidget {
 }
 
 class _VendorHomePageState extends State<VendorHomePage> {
+  bool _isLocked = false;
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
         setState(() {});
       },
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          //# shop profile
-          FutureBuilder(
-            future: sl<ProfileRepository>().getShopProfile(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final resultEither = snapshot.data!;
-
-                return resultEither.fold(
-                  (error) => MessageScreen.error(error.message),
-                  (ok) => VendorShopInfoView(shopId: ok.data!.shopId),
-                );
-              } else if (snapshot.hasError) {
-                return MessageScreen.error(snapshot.error.toString());
-              }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
-          //# order tracking
-          const OrderPurchaseTracking(), //> use const will avoid rebuild
-          const SizedBox(height: 8),
-
-          //# menu action
-          Wrapper(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            child: Wrap(
-              alignment: WrapAlignment.spaceEvenly,
+      child: _isLocked
+          ? MessageScreen.error('Tài khoản của bạn đã bị khóa')
+          : ListView(
+              padding: EdgeInsets.zero,
               children: [
-                MenuItem('Sản phẩm của tôi', Icons.my_library_books, onPressed: () async {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const VendorProductPage();
-                      },
-                    ),
-                  );
-                }),
-                MenuItem('Thêm sản phẩm', Icons.playlist_add, onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const AddUpdateProductPage();
-                      },
-                    ),
-                  );
-                }),
-                MenuItem('Quản lý Voucher', Icons.card_giftcard, onPressed: () => widget.onItemTapped(2)),
-                MenuItem('Quản lý Danh mục', Icons.card_giftcard, onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const ShopCategoryManagePage();
-                      },
-                    ),
-                  );
-                }),
+                //# shop profile
+                FutureBuilder(
+                  future: sl<ProfileRepository>().getShopProfile(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final resultEither = snapshot.data!;
+
+                      return resultEither.fold(
+                        (error) => MessageScreen.error(error.message),
+                        (ok) {
+                          if (ok.data!.status == Status.LOCKED.name || ok.data!.status == Status.DELETED.name) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              setState(() {
+                                _isLocked = true;
+                              });
+                            });
+                          }
+
+                          return VendorShopInfoView(shopId: ok.data!.shopId);
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return MessageScreen.error(snapshot.error.toString());
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+                //# order tracking
+                const OrderPurchaseTracking(), //> use const will avoid rebuild
+                const SizedBox(height: 8),
+
+                //# menu action
+                Wrapper(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    children: [
+                      MenuItem('Sản phẩm của tôi', Icons.my_library_books, onPressed: () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const VendorProductPage();
+                            },
+                          ),
+                        );
+                      }),
+                      MenuItem('Thêm sản phẩm', Icons.playlist_add, onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const AddUpdateProductPage();
+                            },
+                          ),
+                        );
+                      }),
+                      MenuItem('Quản lý Voucher', Icons.card_giftcard, onPressed: () => widget.onItemTapped(2)),
+                      MenuItem('Quản lý Danh mục', Icons.card_giftcard, onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const ShopCategoryManagePage();
+                            },
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

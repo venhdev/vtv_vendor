@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.4+1] - 19/07/2024
+
+- lock (still only handle on homepage)
+- ...
+
 ## [1.0.3] - 09/07/2024
 
 - show all voucher

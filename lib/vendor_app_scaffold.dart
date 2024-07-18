@@ -54,20 +54,21 @@ class _AppScaffoldState extends State<AppScaffold> {
   String _appTitle(int index) {
     switch (index) {
       case 0:
-        return 'Vendor App';
+        return 'Shop của bạn';
       case 1:
         return 'Ví tiền';
       case 2:
         return 'Voucher của shop';
       case 3:
-        return 'Doanh thu';
+        return 'Thống kê';
       default:
-        return 'Vendor App';
+        return 'Shop của bạn';
     }
   }
 
   List<Widget>? _actions(int index) {
     switch (index) {
+      //# Ví tiền
       case 0:
         return [
           //# notification
@@ -98,6 +99,7 @@ class _AppScaffoldState extends State<AppScaffold> {
             },
           ),
         ];
+      //# Voucher của shop
       case 2:
         return [
           IconButton(
@@ -107,6 +109,26 @@ class _AppScaffoldState extends State<AppScaffold> {
             },
           ),
         ];
+      //# Ví tiền
+      case 1:
+        return [
+          TextButton.icon(
+            label: const Text('Thống kê'),
+            icon: const Icon(Icons.stacked_line_chart_outlined),
+            onPressed: () => _onItemTapped(3),
+          ),
+        ];
+
+      //# Doanh thu
+      case 3:
+        return [
+          TextButton.icon(
+            label: const Text('Lịch sử giao dịch'),
+            icon: const Icon(Icons.history),
+            onPressed: () => _onItemTapped(1),
+          ),
+        ];
+
       default:
         return null;
     }
@@ -224,5 +246,3 @@ class _AppScaffoldState extends State<AppScaffold> {
     );
   }
 }
-
-
